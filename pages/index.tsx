@@ -112,20 +112,20 @@ const DEFAULT_INVOICE = {
 const invoiceList = [DEFAULT_INVOICE, DEFAULT_INVOICE]
 
 export default function Home() {
-  const { colorMode, toggleColorMode } = useColorMode()
+  // const { colorMode, toggleColorMode } = useColorMode()
 
-  const componentRef = React.useRef<HTMLDivElement>(null)
-  const onPrint = useReactToPrint({
-    content: () => componentRef.current,
-    onBeforeGetContent: () => {
-      // snap.setIsPrinting(true)
-    },
-    onAfterPrint: () => {
-      // snap.setIsPrinting(false)
-    },
-  })
-  const disclosure = useDisclosure()
-  const { isOpen, onOpen, onClose, onToggle } = disclosure
+  // const componentRef = React.useRef<HTMLDivElement>(null)
+  // const onPrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  //   onBeforeGetContent: () => {
+  //     // snap.setIsPrinting(true)
+  //   },
+  //   onAfterPrint: () => {
+  //     // snap.setIsPrinting(false)
+  //   },
+  // })
+  // const disclosure = useDisclosure()
+  // const { isOpen, onOpen, onClose, onToggle } = disclosure
 
   return (
     <>
@@ -141,7 +141,7 @@ export default function Home() {
         <Stack mx="auto" maxW="5xl" width="full" spacing={6}>
           <Stack spacing={10}>
             <Received />
-            <InvoiceHeader onPrint={onPrint} />
+            <InvoiceHeader />
           </Stack>
           <InvoiceList />
         </Stack>
@@ -153,7 +153,7 @@ export default function Home() {
   )
 }
 
-function InvoiceHeader({ onPrint }: any) {
+function InvoiceHeader() {
   const router = useRouter()
   return (
     <Stack isInline justifyContent="space-between">

@@ -9,7 +9,7 @@ import { useReactToPrint } from "react-to-print"
 // import { getFingerprint } from "../utils/fingerprint"
 // import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query"
 // import { addInvoiceItem, subscribeOnDataChange } from "../utils/firebase"
-import { FiCheck } from "react-icons/fi"
+// import { FiCheck } from "react-icons/fi"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/dist/client/router"
 const Editor = dynamic(() => import("../components/editor"), { ssr: false })
@@ -18,16 +18,30 @@ export default function Create() {
   const [isPrinting, setIsPrinting] = React.useState(false)
   const router = useRouter()
   const componentRef = React.useRef<HTMLDivElement>(null)
-  const onPrint = useReactToPrint({
+  const print = useReactToPrint({
     content: () => componentRef.current,
-    onBeforeGetContent: () => {
-      setIsPrinting(true)
-    },
+    // onBeforeGetContent: () => {
+    //   setIsPrinting(false)
+    // },
+    // onBeforePrint: () => {
+    //   setIsPrinting(true)
+    // },
     onAfterPrint: () => {
-      setIsPrinting(false)
+      //   setIsPrinting(false)
       router.push("/")
     },
   })
+
+  const onPrint = () => {
+    setIsPrinting(true)
+  }
+
+  React.useEffect(() => {
+    if (isPrinting) {
+      print && print()
+    }
+  }, [isPrinting, print])
+
   return (
     <>
       <Head>
@@ -54,7 +68,7 @@ export default function Create() {
 const InvoiceToPrint = React.forwardRef(({ isPrinting }: any, ref) => {
   return (
     //   @ts-ignore
-    <Box ref={ref} height="full" width="full" p="1cm" pl="2.5cm" pt="2cm">
+    <Box ref={ref} height="full" width="full" p="1cm" pl="2.5cm" pt="2cm" color="gray.900">
       <Stack isInline>
         <Box flex={0.7}>
           <Editor
@@ -188,7 +202,7 @@ function InvoiceItemList({ isPrinting }: any) {
 
   return (
     <Stack>
-      <Table key={key}>
+      <Table key={key} color="gray.900">
         <Thead>
           <Tr>
             {state.table[0].map(({ value, type }, index) => {
@@ -245,9 +259,11 @@ function InvoiceItemList({ isPrinting }: any) {
       </Table>
       <Stack isInline justifyContent="space-between">
         <Box>
-          <Button display={isPrinting ? "none" : "block"} variant="unstyled" fontWeight="black" fontSize="xs" onClick={addRowItem}>
-            + ADD ITEM
-          </Button>
+          <Box display={isPrinting ? "none" : "block"}>
+            <Button variant="unstyled" fontWeight="black" fontSize="xs" onClick={addRowItem}>
+              + ADD ITEM
+            </Button>
+          </Box>
         </Box>
         <Box pt={10}>
           <Stack isInline>
