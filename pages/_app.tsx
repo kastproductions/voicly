@@ -1,7 +1,18 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app"
+import { ChakraProvider } from "@chakra-ui/react"
+import { ReactQueryDevtools } from "react-query/devtools"
+import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query"
+import "../styles/editor.scss"
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+const queryClient = new QueryClient()
+
+export default function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider>
+        <Component {...pageProps} />
+      </ChakraProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  )
 }
-export default MyApp

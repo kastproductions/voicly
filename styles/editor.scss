@@ -1,0 +1,101 @@
+.ProseMirror  {
+  h1 {
+    // font-size: 3rem;
+    // line-height: 1;
+
+    font-size: 2em;
+    margin-bottom: 0.57em;
+  }
+  h2 {
+    // font-size: 1.875rem;
+    // line-height: 2.25rem;
+
+    font-size: 1.5em;
+    margin-bottom: 0.57em;
+  }
+  h3 {
+    // font-size: 1.25rem;
+    // line-height: 1.75rem;
+
+    font-size: 1.17em;
+    margin-bottom: 0.57em;
+  }
+  h4 {
+    font-size: .83em;
+    // margin-top: 1.67em;
+    // margin-bottom: 1.67em;
+
+  }
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-top: 1em;
+    margin-bottom: 1 em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+}
+
+[contenteditable]:focus {
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
+  outline: 3px solid transparent;
+  // padding: 0.3rem 0.1rem;
+}
+
+// .ProseMirror  {
+//   h1 {
+//     font-size: 3rem;
+//     line-height: 1;
+//   }
+//   h2 {
+//     font-size: 2.25rem;
+//     line-height: 2.5rem;
+//   }
+//   h3 {
+//     font-size: 1.875rem;
+//     line-height: 2.25rem;
+//   }
+//   h4 {
+//     font-size: 1.5rem;
+//     line-height: 2rem;
+//   }
+//   h5 {
+//     font-size: 1.25rem;
+//     line-height: 1.75rem;
+//   }
+//   h6 {
+//     font-size: 0.75rem;
+//     line-height: 1rem;
+//   }
+//   ul {
+//     display: block;
+//     list-style-type: disc;
+//     margin-top: 1em;
+//     margin-bottom: 1 em;
+//     margin-left: 0;
+//     margin-right: 0;
+//     padding-left: 40px;
+//   }
+//   ol {
+//     display: block;
+//     list-style-type: decimal;
+//     margin-top: 1em;
+//     margin-bottom: 1em;
+//     margin-left: 0;
+//     margin-right: 0;
+//     padding-left: 40px;
+//   }
+// }
+
+
+
