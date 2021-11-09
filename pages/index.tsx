@@ -126,7 +126,6 @@ export default function Home() {
   })
   const disclosure = useDisclosure()
   const { isOpen, onOpen, onClose, onToggle } = disclosure
-  // const isOpen = true
 
   return (
     <>
@@ -138,7 +137,7 @@ export default function Home() {
           rel="stylesheet"
         ></link>
       </Head>
-      <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh">
+      <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh" color="gray.900">
         <Stack mx="auto" maxW="5xl" width="full" spacing={6}>
           <Stack spacing={10}>
             <Received />
@@ -147,9 +146,9 @@ export default function Home() {
           <InvoiceList />
         </Stack>
       </Box>
-      <Box position="absolute" left="-10000px" width="1px" height="1px" top="auto" overflow="hidden">
+      {/* <Box position="absolute" left="-10000px" width="1px" height="1px" top="auto" overflow="hidden">
         <InvoiceToPrint ref={componentRef} />
-      </Box>
+      </Box> */}
     </>
   )
 }

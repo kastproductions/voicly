@@ -38,7 +38,7 @@ export default function Create() {
           rel="stylesheet"
         ></link>
       </Head>
-      <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh">
+      <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh" color="gray.900">
         <Button onClick={() => router.push("/")}>Home</Button>
         <Button onClick={onPrint}>Print</Button>
 
