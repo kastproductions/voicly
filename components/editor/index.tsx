@@ -73,7 +73,7 @@ export default function Editor({ content }: any) {
       }),
     ],
   })
-  console.log(editor?.getHTML())
+  // console.log(editor?.getHTML())
 
   return <EditorContent editor={editor} />
 }

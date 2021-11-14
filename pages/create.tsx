@@ -94,6 +94,9 @@ export default function Create() {
                   <option value="system-ui">system-ui</option>
                   <option value="Montserrat">Montserrat</option>
                   <option value="monospace">monospace</option>
+                  <option value="Verdana">Verdana</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Comic Sans MS">Comic Sans MS</option>
                 </select>
               </Stack>
               <Stack isInline>
@@ -311,7 +314,7 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
     rerender()
   }
 
-  console.log({ state })
+  // console.log({ state })
 
   return (
     <Stack>
