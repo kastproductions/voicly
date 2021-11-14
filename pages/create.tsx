@@ -39,9 +39,9 @@ export default function Create() {
     },
   })
 
-  React.useEffect(() => {
-    setIsRetina(window.devicePixelRatio > 1)
-  }, [])
+  // React.useEffect(() => {
+  //   setIsRetina(window.devicePixelRatio > 1)
+  // }, [])
 
   const onPrint = () => {
     setIsPrinting(true)
@@ -157,7 +157,9 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
         { type: "Total", value: "500.00" },
       ],
     ],
-    total: "",
+    tax: { name:"PVM", percent:"21" },
+    taxTotal: "0",
+    total: "0",
     notes: `
       <p><strong>Papildoma informacija</strong></p>
       <p>Atsiskaitymas bankiniu pavedimu.</p><p>Sąskaitą išrašė: Karolis Stulgys</p><p>Banko adresas: Pilaitės pr. 16, Vilnius, LT-04352,</p><p>Banko pavadinimas: Paysera LT, UAB</p><p>Gavėjas: MB “Kast productions”</p><p>IBAN: LT503500010014583277</p><p>SWIFT/BIC: EVIULT2VXXX</p><p>Šalis: Lietuva</p>
@@ -252,7 +254,7 @@ InvoiceToPrint.displayName = "InvoiceToPrint"
 
 function InvoiceItemList({ isPrinting, state, setstate }: any) {
   React.useEffect(() => {
-    const total:string = state.table
+    let total:number = state.table
     // @ts-ignore
       .reduce((acc, row, index) => {
           if (index === 0) {
@@ -263,16 +265,36 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
           const newtotal = +rowsTotal + acc
           return newtotal as number
       }, 0)
-      .toFixed(2)
-      if (total !== state.total) {
-      setstate({ ...state, total })
+
+      if (typeof state.tax.percent === "undefined"){
+        setstate({ ...state, total: total.toFixed(2)})
+        return
       }
-  }, [state])
+
+      let taxTotal= total * (+state.tax.percent / 100)
+      // @ts-ignore
+      total = (total + taxTotal).toFixed(2)
+      // @ts-ignore
+      taxTotal = taxTotal.toFixed(2)
+      setstate({ ...state, total, taxTotal })
+
+  }, [state.table, state.tax.percent])
+
+
+  const handlePercentageChange = (percent:string) => {
+    if (percent === "") {
+      setstate({...state, tax: {...state.tax, percent:undefined}, taxTotal: undefined})
+      return 
+    }
+    if (Number.isNaN(+percent)) {
+      return
+    }
+    setstate({...state, tax: {...state.tax, percent}})
+  }
 
   const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
 
   const handleChange = ({ index, rowIndex, type, value }: any) => {
-    // console.log({ index, rowIndex, type, value })
     const newState = { ...state }
     // This is header
     if (rowIndex === 0) {
@@ -297,7 +319,7 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
     newState.table[rowIndex][indexOfTotal].value = (
       +newState.table[rowIndex][indexOfPrice].value * +newState.table[rowIndex][indexOfAmount].value
     ).toFixed(2)
-    setstate(newState)
+    setstate({...newState, table: [...newState.table]})
     rerender()
   }
 
@@ -317,8 +339,8 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
   // console.log({ state })
 
   return (
-    <Stack>
-      <Table key={key} color="gray.900">
+    <Stack >
+      <Table  color="gray.900" key={key}>
         <Thead>
           <Tr>
             {/* @ts-ignore */}
@@ -385,15 +407,38 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
               + ADD ITEM
             </Button>
           </Box>
+          {/* <Box display={isPrinting ? "none" : "block"}>
+            <Button variant="unstyled" fontWeight="black" fontSize="xs" onClick={addRowItem}>
+              + ADD TAX
+            </Button>
+          </Box> */}
         </Box>
-        <Box pt={10}>
+        <Stack pt={4} alignItems='end'>
+          <Stack isInline>
+            <Stack isInline>
+              <Editor content={state.tax.name} />
+              <Stack isInline spacing={0}>
+                <Text
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(el) => {
+                    handlePercentageChange(el.currentTarget.innerText)
+                  }}
+                >
+                  {state.tax.percent}
+                  </Text>
+                <Editor content="%:" /> 
+              </Stack>
+            </Stack>
+            <Text>{state.tax.percent && state.taxTotal}</Text>
+          </Stack>
           <Stack isInline>
             <Box>
               <Editor content="Viso:" />
             </Box>
             <Text>{state.total}</Text>
           </Stack>
-        </Box>
+        </Stack>
       </Stack>
     </Stack>
   )
