@@ -132,10 +132,10 @@ export default function Home() {
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
+        {/* <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
-        ></link>
+        ></link> */}
       </Head>
       <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh" color="gray.900">
         <Stack mx="auto" maxW="5xl" width="full" spacing={6}>

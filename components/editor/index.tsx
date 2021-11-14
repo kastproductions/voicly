@@ -27,8 +27,6 @@ const MenuBar = ({ editor }: any) => {
     return null
   }
 
-  // console.log(editor.getHTML())
-
   return (
     <Stack isInline spacing={0} mb={1} border="1px solid" alignItems="center">
       <Button onClick={() => editor.chain().focus().setParagraph().run()} active={editor.isActive("paragraph")} fontSize="sm" _hover={{}}>
@@ -67,29 +65,35 @@ const MenuBar = ({ editor }: any) => {
 
 export default function Editor({ content }: any) {
   const editor = useEditor({
+    content,
     extensions: [
       StarterKit,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
     ],
-    content,
   })
+  console.log(editor?.getHTML())
 
-  return (
-    <Box role="group" position="relative">
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        transform="translateY(-90%)"
-        opacity={0}
-        _groupHover={{ transform: "translateY(-100%)", opacity: 1 }}
-        transition="all 0.2s ease-in-out"
-      >
-        <MenuBar editor={editor} />
-      </Box>
-      <EditorContent editor={editor} />
-    </Box>
-  )
+  return <EditorContent editor={editor} />
+}
+
+{
+  /* <Box
+role="group"
+position="relative"
+>
+  <Box
+    position="absolute"
+    top={0}
+    left={0}
+    transform="translateY(-90%)"
+    opacity={0}
+    _groupHover={{ transform: "translateY(-100%)", opacity: 1 }}
+    transition="all 0.2s ease-in-out"
+  >
+    <MenuBar editor={editor} />
+  </Box>
+  <EditorContent editor={editor} />
+</Box> */
 }
