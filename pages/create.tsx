@@ -132,13 +132,11 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
       invoiceNo: "<p>00004</p>",
     },
     buyer: {
-      // buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
-      // buyerName: `
-      // <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
-      // `,
+      buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
+      buyerName: `
+      <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
+      `,
       buyerDetails: `
-        <p style="text-align: right">Pirkėjo rekvizitai:</p>
-        <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
         <p style="text-align: right">Adreasas: V.Berbomo g. 10, Klaipėda</p>
         <p style="text-align: right">Įmonės kodas: 304166570</p>
       `,
@@ -168,11 +166,18 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
     `,
   })
 
-  // const { onSelectFile, selectedFile, preview } = useImageUpload()
+  const { onSelectFile, selectedFile, preview } = useImageUpload()
 
   const { sellerName, sellerDetails, issuedOnName, issuedOn, dueToName, dueTo, invoiceNoName, invoiceNo, invoiceName } = state.seller
-  const { buyerDetails } = state.buyer
+  const { buyerHeader, buyerName, buyerDetails } = state.buyer
   const { notes } = state
+
+  const [picture, setPicture] = React.useState('');
+
+  // @ts-ignore
+  const onChangePicture = e => {
+    setPicture(URL.createObjectURL(e.target.files[0]));
+  };
 
   return (
     //  @ts-ignore
@@ -198,14 +203,13 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
           justifyContent="center"
           alignItems="center"
           flex={0.3}
-          border={isPrinting ? "none" : "1px dashed"}
+          border={isPrinting || picture ? "none" : "1px dashed"}
           maxH={32}
           borderColor="gray.300"
         >
           <Box as="label" htmlFor="upload-logo" cursor="pointer" width="full" height="full">
-            {/* <Input name="logo" id="upload-logo" type="file" onChange={onSelectFile} opacity={0} position="absolute" zIndex={-1} /> */}
-
-            {/* {preview && <Image maxW={64} maxH={48} position='absolute' top='2cm' right="1cm" src="/img/logo.png" />} */}
+          {!isPrinting && !picture && <input  name="logo" id="upload-logo" type="file" onChange={onChangePicture} />}
+            {picture && <Image maxW={64} maxH={32} position='absolute' top='2cm' right="1cm" src={picture} />}
             {/* <Image
               maxW={64}
               maxH={48}
@@ -237,8 +241,8 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
           </Stack>
         </Box>
         <Box flex={1}>
-          {/* <Editor content={buyerHeader} />
-          <Editor content={buyerName} /> */}
+          <Editor content={buyerHeader} />
+          <Editor content={buyerName} />
           <Editor content={buyerDetails} />
         </Box>
       </Stack>
@@ -483,3 +487,5 @@ function useImageUpload() {
     preview,
   }
 }
+
+

@@ -39,6 +39,7 @@
     "react-query": "^3.31.0",
     "react-to-print": "^2.14.0",
     "sass": "^1.43.4",
+    "use-cloudinary": "^4.1.1",
     "valtio": "^1.2.5",
     "yarn": "^1.22.17"
   },
