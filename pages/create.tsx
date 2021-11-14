@@ -132,11 +132,13 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
       invoiceNo: "<p>00004</p>",
     },
     buyer: {
-      buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
-      buyerName: `
-      <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
-      `,
+      // buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
+      // buyerName: `
+      // <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
+      // `,
       buyerDetails: `
+        <p style="text-align: right">Pirkėjo rekvizitai:</p>
+        <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
         <p style="text-align: right">Adreasas: V.Berbomo g. 10, Klaipėda</p>
         <p style="text-align: right">Įmonės kodas: 304166570</p>
       `,
@@ -169,7 +171,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
   // const { onSelectFile, selectedFile, preview } = useImageUpload()
 
   const { sellerName, sellerDetails, issuedOnName, issuedOn, dueToName, dueTo, invoiceNoName, invoiceNo, invoiceName } = state.seller
-  const { buyerHeader, buyerName, buyerDetails } = state.buyer
+  const { buyerDetails } = state.buyer
   const { notes } = state
 
   return (
@@ -235,8 +237,8 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
           </Stack>
         </Box>
         <Box flex={1}>
-          <Editor content={buyerHeader} />
-          <Editor content={buyerName} />
+          {/* <Editor content={buyerHeader} />
+          <Editor content={buyerName} /> */}
           <Editor content={buyerDetails} />
         </Box>
       </Stack>
