@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Stack, Text, Button, Box, Table, Thead, Tbody, Tfoot, Tr, Th, Td, Input, Image } from "@chakra-ui/react"
+import { Stack, Text, Button, Box, Table, Thead, Tbody, Tfoot, Tr, Th, Td, Input, Image, Switch, FormControl, FormLabel } from "@chakra-ui/react"
 import { nanoid } from "nanoid"
 import Head from "next/head"
 import React, { useReducer } from "react"
@@ -19,6 +19,7 @@ export default function Create() {
   const componentRef = React.useRef<HTMLDivElement>(null)
   const [isPrinting, setIsPrinting] = React.useState(false)
   const [isRetina, setIsRetina] = React.useState(false)
+  const [showEditableFields, setShowEditableFields] = React.useState(false)
   const [fontFamily, setFontFamily] = React.useState("monospace")
 
   // const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
@@ -45,6 +46,7 @@ export default function Create() {
 
   const onPrint = () => {
     setIsPrinting(true)
+    setShowEditableFields(false)
     print && print()
   }
 
@@ -73,7 +75,7 @@ export default function Create() {
                 minH="297mm"
                 position="relative"
               >
-                <InvoiceToPrint fontFamily={fontFamily} ref={componentRef} isPrinting={isPrinting} />
+                <InvoiceToPrint fontFamily={fontFamily} ref={componentRef} isPrinting={isPrinting} showEditableFields={showEditableFields}/>
                 <Box
                   position="absolute"
                   // top={isRetina ? "calc(297mm * 1.38)" : "297mm"}
@@ -87,6 +89,12 @@ export default function Create() {
               </Box>
             </Box>
             <Stack>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="fields" mb="0">
+                  Show editable fields
+                </FormLabel>
+                <Switch id="fields" isChecked={showEditableFields} onChange={()=>setShowEditableFields(!showEditableFields)}/>
+              </FormControl>
               <Stack isInline alignItems="center">
                 <Text>Font:</Text>
                 <select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)}>
@@ -111,7 +119,7 @@ export default function Create() {
   )
 }
 
-const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) => {
+const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableFields }: any, ref) => {
   const [state, setstate] = React.useState({
     seller: {
       sellerName: `<h2>MB “KAST PRODUCTIONS”</h2>`,
@@ -195,7 +203,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
       position="relative"
     >
       <Stack isInline>
-        <Box flex={0.7}>
+        <Box flex={0.7} bg={showEditableFields ? 'blue.50' : 'transparent'}>
           <Editor content={sellerName} />
           <Editor content={sellerDetails} />
         </Box>
@@ -206,6 +214,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
           border={isPrinting || picture ? "none" : "1px dashed"}
           maxH={32}
           borderColor="gray.300"
+          bg={showEditableFields ? 'blue.50' : 'transparent'}
         >
           <Box as="label" htmlFor="upload-logo" cursor="pointer" width="full" height="full">
           {!isPrinting && !picture && <input  name="logo" id="upload-logo" type="file" onChange={onChangePicture} />}
@@ -226,7 +235,9 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
         </Stack>
       </Stack>
       <Stack isInline spacing={6} pt={20}>
-        <Box flex={1}>
+        <Box flex={1}
+        bg={showEditableFields ? 'blue.50' : 'transparent'}
+        >
           <Editor content={issuedOn} />
           <Editor content={invoiceName} />
           <Stack isInline alignItems="center" spacing={0}>
@@ -240,16 +251,22 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
             <Editor content={dueTo} />
           </Stack>
         </Box>
-        <Box flex={1}>
+        <Box flex={1}
+        bg={showEditableFields ? 'blue.50' : 'transparent'}
+        >
           <Editor content={buyerHeader} />
           <Editor content={buyerName} />
           <Editor content={buyerDetails} />
         </Box>
       </Stack>
       <Stack py={20}>
-        <InvoiceItemList isPrinting={isPrinting} state={state} setstate={setstate} />
+        <InvoiceItemList isPrinting={isPrinting} state={state} setstate={setstate} 
+        showEditableFields={showEditableFields}
+        />
       </Stack>
-      <Box>
+      <Box
+        bg={showEditableFields ? 'blue.50' : 'transparent'}
+      >
         <Editor content={notes} />
       </Box>
     </Box>
@@ -258,7 +275,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily }: any, ref) =
 
 InvoiceToPrint.displayName = "InvoiceToPrint"
 
-function InvoiceItemList({ isPrinting, state, setstate }: any) {
+function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: any) {
   React.useEffect(() => {
     let total:number = state.table
     // @ts-ignore
@@ -367,6 +384,7 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
                   onBlur={(el) => {
                     handleChange({ index, rowIndex: 0, type, value: el.currentTarget.innerText })
                   }}
+                  bg={showEditableFields ? 'blue.50' : 'transparent'}
                 >
                   {value}
                 </Th>
@@ -395,6 +413,7 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
                       onBlur={(el) => {
                         handleChange({ index, rowIndex, type, value: el.currentTarget.innerText })
                       }}
+                      bg={showEditableFields ? 'blue.50' : 'transparent'}
                     >
                       {value}
                     </Td>
@@ -420,7 +439,9 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
         </Box>
         <Stack pt={4} alignItems='end'>
           <Stack isInline>
-            <Stack isInline>
+            <Stack isInline
+              bg={showEditableFields ? 'blue.50' : 'transparent'}
+            >
               <Editor content={state.tax.name} />
               <Stack isInline spacing={0}>
                 <Text
@@ -438,7 +459,9 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
             <Text>{state.tax.percent && state.taxTotal}</Text>
           </Stack>
           <Stack isInline>
-            <Box>
+            <Box
+              bg={showEditableFields ? 'blue.50' : 'transparent'}
+            >
               <Editor content="Viso:" />
             </Box>
             <Text>{state.total}</Text>
