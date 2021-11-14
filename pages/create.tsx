@@ -287,6 +287,7 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
       return 
     }
     if (Number.isNaN(+percent)) {
+      setstate({...state, tax: {...state.tax, percent: "21"}})
       return
     }
     setstate({...state, tax: {...state.tax, percent}})
@@ -335,8 +336,6 @@ function InvoiceItemList({ isPrinting, state, setstate }: any) {
     setstate(newState)
     rerender()
   }
-
-  // console.log({ state })
 
   return (
     <Stack >
