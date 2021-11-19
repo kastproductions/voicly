@@ -1,5 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Stack, Text, Button, Box, Table, Thead, Tbody, Tfoot, Tr, Th, Td, Input, Image, Switch, FormControl, FormLabel } from "@chakra-ui/react"
+import {
+  Stack,
+  Text,
+  Button,
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  Input,
+  Image,
+  Switch,
+  FormControl,
+  FormLabel,
+} from "@chakra-ui/react"
 import { nanoid } from "nanoid"
 import Head from "next/head"
 import React, { useReducer } from "react"
@@ -75,7 +92,12 @@ export default function Create() {
                 minH="297mm"
                 position="relative"
               >
-                <InvoiceToPrint fontFamily={fontFamily} ref={componentRef} isPrinting={isPrinting} showEditableFields={showEditableFields}/>
+                <InvoiceToPrint
+                  fontFamily={fontFamily}
+                  ref={componentRef}
+                  isPrinting={isPrinting}
+                  showEditableFields={showEditableFields}
+                />
                 <Box
                   position="absolute"
                   // top={isRetina ? "calc(297mm * 1.38)" : "297mm"}
@@ -93,7 +115,7 @@ export default function Create() {
                 <FormLabel htmlFor="fields" mb="0">
                   Show editable fields
                 </FormLabel>
-                <Switch id="fields" isChecked={showEditableFields} onChange={()=>setShowEditableFields(!showEditableFields)}/>
+                <Switch id="fields" isChecked={showEditableFields} onChange={() => setShowEditableFields(!showEditableFields)} />
               </FormControl>
               <Stack isInline alignItems="center">
                 <Text>Font:</Text>
@@ -119,60 +141,62 @@ export default function Create() {
   )
 }
 
-const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableFields }: any, ref) => {
-  const [state, setstate] = React.useState({
-    seller: {
-      sellerName: `<h2>MB “KAST PRODUCTIONS”</h2>`,
-      sellerHeader: ``,
-      sellerDetails: `
-        <p>Adresas: Lazdijų r. Mokyklos g. 13.</p>
-        <p>Tel: +37063692435</p>
-        <p>Įmonės kodas: 39101260856</p>
-        <p>hello@kastproductions.com </p>
-        <p>https://kastproductions.com</p>
-      `,
-      issuedOnName: "",
-      issuedOn: "<p>09-11-2021</p>",
-      invoiceName: "<h2><strong>SĄSKAITA FAKTŪRA</strong></h2>",
-      dueToName: "<p><strong>APMOKETI IKI:</strong></p>",
-      dueTo: "<p>09-11-2021</p>",
-      invoiceNoName: "<p><strong>SERIJOS NR.:</strong></p>",
-      invoiceNo: "<p>00004</p>",
-    },
-    buyer: {
-      buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
-      buyerName: `
-      <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
-      `,
-      buyerDetails: `
-        <p style="text-align: right">Adreasas: V.Berbomo g. 10, Klaipėda</p>
-        <p style="text-align: right">Įmonės kodas: 304166570</p>
-      `,
-    },
-    table: [
-      [
-        { type: "Service", name: "Service", value: "Prekės ar paslaugos pavadinimas", enabled: true },
-        { type: "Units", name: "Units", value: "Mato vnt.", enabled: true },
-        { type: "Amount", name: "Amount", value: "Kiekis", enabled: true },
-        { type: "Price", name: "Price", value: "Kaina, EUR", enabled: true },
-        { type: "Total", name: "Total", value: "Suma, EUR", enabled: true },
-      ],
-      [
-        { type: "Service", value: "Web programavimas" },
-        { type: "Units", value: "valandos" },
-        { type: "Amount", value: "5" },
-        { type: "Price", value: "100.00" },
-        { type: "Total", value: "500.00" },
-      ],
-    ],
-    tax: { name:"PVM", percent:"21" },
-    taxTotal: "0",
-    total: "0",
-    notes: `
-      <p><strong>Papildoma informacija</strong></p>
-      <p>Atsiskaitymas bankiniu pavedimu.</p><p>Sąskaitą išrašė: Karolis Stulgys</p><p>Banko adresas: Pilaitės pr. 16, Vilnius, LT-04352,</p><p>Banko pavadinimas: Paysera LT, UAB</p><p>Gavėjas: MB “Kast productions”</p><p>IBAN: LT503500010014583277</p><p>SWIFT/BIC: EVIULT2VXXX</p><p>Šalis: Lietuva</p>
+const sampleInvoiceInput = {
+  seller: {
+    sellerName: `<h2>“HELLO WORLD”</h2>`,
+    sellerHeader: ``,
+    sellerDetails: `
+      <p>Address: hello st. 66, World</p>
+      <p>Tel: +12345678</p>
+      <p>Code: 123</p>
+      <p>Email: hello@helloworld.com</p>
+      <p>Website: https://helloworld.com</p>
     `,
-  })
+    issuedOnName: "",
+    issuedOn: `<p>${new Date().toLocaleDateString("en-US")}</p>`,
+    invoiceName: "<h2><strong>INVOICE</strong></h2>",
+    dueToName: "<p><strong>DUE TO:</strong></p>",
+    dueTo: "<p>09-11-2021</p>",
+    invoiceNoName: "<p><strong>SINVOICE NO.:</strong></p>",
+    invoiceNo: "<p>00001</p>",
+  },
+  buyer: {
+    buyerHeader: `<p style="text-align: right">Client</p>`,
+    buyerName: `
+    <p style="text-align: right"><strong>“Hello Client”</strong></p>
+    `,
+    buyerDetails: `
+      <p style="text-align: right">Address: Hello address 67, World</p>
+      <p style="text-align: right">Code: 321</p>
+    `,
+  },
+  table: [
+    [
+      { type: "Service", name: "Service", value: "Service", enabled: true },
+      { type: "Units", name: "Units", value: "Units", enabled: true },
+      { type: "Amount", name: "Amount", value: "Amount", enabled: true },
+      { type: "Price", name: "Price", value: "Price, EUR", enabled: true },
+      { type: "Total", name: "Total", value: "Total, EUR", enabled: true },
+    ],
+    [
+      { type: "Service", value: "Web development" },
+      { type: "Units", value: "hours" },
+      { type: "Amount", value: "5" },
+      { type: "Price", value: "100.00" },
+      { type: "Total", value: "500.00" },
+    ],
+  ],
+  tax: { name: "VAT", percent: "10" },
+  taxTotal: "0",
+  total: "0",
+  notes: `
+    <p><strong>NOTES</strong></p>
+    <p>Bank address: Hello 16, World</p><p>Bank name: HHH</p><p>Receiver: “Hello World”</p><p>IBAN: LT1234567890</p><p>SWIFT/BIC: WWWXXX</p><p>Country: Lithuania</p>
+  `,
+}
+
+const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableFields }: any, ref) => {
+  const [state, setstate] = React.useState(() => sampleInvoiceInput)
 
   const { onSelectFile, selectedFile, preview } = useImageUpload()
 
@@ -180,12 +204,12 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
   const { buyerHeader, buyerName, buyerDetails } = state.buyer
   const { notes } = state
 
-  const [picture, setPicture] = React.useState('');
+  const [picture, setPicture] = React.useState("")
 
   // @ts-ignore
-  const onChangePicture = e => {
-    setPicture(URL.createObjectURL(e.target.files[0]));
-  };
+  const onChangePicture = (e) => {
+    setPicture(URL.createObjectURL(e.target.files[0]))
+  }
 
   return (
     //  @ts-ignore
@@ -203,7 +227,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
       position="relative"
     >
       <Stack isInline>
-        <Box flex={0.7} bg={showEditableFields ? 'blue.50' : 'transparent'}>
+        <Box flex={0.7} bg={showEditableFields ? "blue.50" : "transparent"}>
           <Editor content={sellerName} />
           <Editor content={sellerDetails} />
         </Box>
@@ -214,11 +238,11 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
           border={isPrinting || picture ? "none" : "1px dashed"}
           maxH={32}
           borderColor="gray.300"
-          bg={showEditableFields ? 'blue.50' : 'transparent'}
+          bg={showEditableFields ? "blue.50" : "transparent"}
         >
           <Box as="label" htmlFor="upload-logo" cursor="pointer" width="full" height="full">
-          {!isPrinting && !picture && <input  name="logo" id="upload-logo" type="file" onChange={onChangePicture} />}
-            {picture && <Image maxW={64} maxH={32} position='absolute' top='2cm' right="1cm" src={picture} />}
+            {!isPrinting && !picture && <input name="logo" id="upload-logo" type="file" onChange={onChangePicture} />}
+            {picture && <Image maxW={64} maxH={32} position="absolute" top="2cm" right="1cm" src={picture} />}
             {/* <Image
               maxW={64}
               maxH={48}
@@ -235,9 +259,7 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
         </Stack>
       </Stack>
       <Stack isInline spacing={6} pt={20}>
-        <Box flex={1}
-        bg={showEditableFields ? 'blue.50' : 'transparent'}
-        >
+        <Box flex={1} bg={showEditableFields ? "blue.50" : "transparent"}>
           <Editor content={issuedOn} />
           <Editor content={invoiceName} />
           <Stack isInline alignItems="center" spacing={0}>
@@ -251,22 +273,16 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
             <Editor content={dueTo} />
           </Stack>
         </Box>
-        <Box flex={1}
-        bg={showEditableFields ? 'blue.50' : 'transparent'}
-        >
+        <Box flex={1} bg={showEditableFields ? "blue.50" : "transparent"}>
           <Editor content={buyerHeader} />
           <Editor content={buyerName} />
           <Editor content={buyerDetails} />
         </Box>
       </Stack>
       <Stack py={20}>
-        <InvoiceItemList isPrinting={isPrinting} state={state} setstate={setstate} 
-        showEditableFields={showEditableFields}
-        />
+        <InvoiceItemList isPrinting={isPrinting} state={state} setstate={setstate} showEditableFields={showEditableFields} />
       </Stack>
-      <Box
-        bg={showEditableFields ? 'blue.50' : 'transparent'}
-      >
+      <Box bg={showEditableFields ? "blue.50" : "transparent"}>
         <Editor content={notes} />
       </Box>
     </Box>
@@ -277,43 +293,43 @@ InvoiceToPrint.displayName = "InvoiceToPrint"
 
 function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: any) {
   React.useEffect(() => {
-    let total:number = state.table
-    // @ts-ignore
+    let total: number = state.table
+      // @ts-ignore
       .reduce((acc, row, index) => {
-          if (index === 0) {
+        if (index === 0) {
           return acc
-          }
-          // @ts-ignore
-          const rowsTotal = row.find(({ type }) => type === "Total").value
-          const newtotal = +rowsTotal + acc
-          return newtotal as number
+        }
+        // @ts-ignore
+        const rowsTotal = row.find(({ type }) => type === "Total").value
+        const newtotal = +rowsTotal + acc
+        return newtotal as number
       }, 0)
 
-      if (typeof state.tax.percent === "undefined"){
-        setstate({ ...state, total: total.toFixed(2)})
-        return
-      }
-
-      let taxTotal= total * (+state.tax.percent / 100)
-      // @ts-ignore
-      total = (total + taxTotal).toFixed(2)
-      // @ts-ignore
-      taxTotal = taxTotal.toFixed(2)
-      setstate({ ...state, total, taxTotal })
-
-  }, [state.table, state.tax.percent])
-
-
-  const handlePercentageChange = (percent:string) => {
-    if (percent === "") {
-      setstate({...state, tax: {...state.tax, percent:undefined}, taxTotal: undefined})
-      return 
-    }
-    if (Number.isNaN(+percent)) {
-      setstate({...state, tax: {...state.tax, percent: "21"}})
+    if (typeof state.tax.percent === "undefined") {
+      setstate({ ...state, total: total.toFixed(2) })
+      rerender()
       return
     }
-    setstate({...state, tax: {...state.tax, percent}})
+
+    let taxTotal = total * (+state.tax.percent / 100)
+    // @ts-ignore
+    total = (total + taxTotal).toFixed(2)
+    // @ts-ignore
+    taxTotal = taxTotal.toFixed(2)
+    setstate({ ...state, total, taxTotal })
+    rerender()
+  }, [state.table, state.tax.percent])
+
+  const handlePercentageChange = (percent: string) => {
+    if (percent === "") {
+      setstate({ ...state, tax: { ...state.tax, percent: undefined }, taxTotal: undefined })
+      return
+    }
+    if (Number.isNaN(+percent)) {
+      setstate({ ...state, tax: { ...state.tax, percent: "21" } })
+      return
+    }
+    setstate({ ...state, tax: { ...state.tax, percent } })
   }
 
   const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
@@ -343,7 +359,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
     newState.table[rowIndex][indexOfTotal].value = (
       +newState.table[rowIndex][indexOfPrice].value * +newState.table[rowIndex][indexOfAmount].value
     ).toFixed(2)
-    setstate({...newState, table: [...newState.table]})
+    setstate({ ...newState, table: [...newState.table] })
     rerender()
   }
 
@@ -361,8 +377,8 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
   }
 
   return (
-    <Stack >
-      <Table  color="gray.900" key={key}>
+    <Stack>
+      <Table key={key} color="gray.900" variant="simple">
         <Thead>
           <Tr>
             {/* @ts-ignore */}
@@ -371,6 +387,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
               const isLast = state.table[0].length - 1 === index
               return (
                 <Th
+                  border="none"
                   textTransform="none"
                   letterSpacing="normal"
                   fontSize="xs"
@@ -384,7 +401,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
                   onBlur={(el) => {
                     handleChange({ index, rowIndex: 0, type, value: el.currentTarget.innerText })
                   }}
-                  bg={showEditableFields ? 'blue.50' : 'transparent'}
+                  bg={showEditableFields ? "blue.50" : "transparent"}
                 >
                   {value}
                 </Th>
@@ -397,13 +414,16 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
           {state.table.map((row, rowIndex) => {
             if (!rowIndex) return
             return (
-              <Tr key={rowIndex} px={2}>
+              <Tr key={rowIndex} px={2} border="none">
                 {/* @ts-ignore */}
                 {row.map(({ value, type }, index) => {
                   const isFirst = index === 0
                   const isLast = state.table[0].length - 1 === index
                   return (
                     <Td
+                      border="none"
+                      // borderTop="1px solid"
+                      // borderColor="gray.900"
                       pl={isFirst ? 0 : 2}
                       pr={isLast ? 0 : 2}
                       key={index}
@@ -413,7 +433,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
                       onBlur={(el) => {
                         handleChange({ index, rowIndex, type, value: el.currentTarget.innerText })
                       }}
-                      bg={showEditableFields ? 'blue.50' : 'transparent'}
+                      bg={showEditableFields ? "blue.50" : "transparent"}
                     >
                       {value}
                     </Td>
@@ -437,11 +457,9 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
             </Button>
           </Box> */}
         </Box>
-        <Stack pt={4} alignItems='end'>
+        <Stack pt={4} alignItems="end">
           <Stack isInline>
-            <Stack isInline
-              bg={showEditableFields ? 'blue.50' : 'transparent'}
-            >
+            <Stack isInline bg={showEditableFields ? "blue.50" : "transparent"}>
               <Editor content={state.tax.name} />
               <Stack isInline spacing={0}>
                 <Text
@@ -452,19 +470,19 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
                   }}
                 >
                   {state.tax.percent}
-                  </Text>
-                <Editor content="%:" /> 
+                </Text>
+                <Editor content="%:" />
               </Stack>
             </Stack>
             <Text>{state.tax.percent && state.taxTotal}</Text>
           </Stack>
           <Stack isInline>
-            <Box
-              bg={showEditableFields ? 'blue.50' : 'transparent'}
-            >
-              <Editor content="Viso:" />
+            <Box bg={showEditableFields ? "blue.50" : "transparent"}>
+              <Editor content="<h2><strong>Total:<h2></strong>" />
             </Box>
-            <Text>{state.total}</Text>
+            <Box bg={showEditableFields ? "blue.50" : "transparent"}>
+              <Editor key={key} content={`<h2><strong>${state.total}<h2></strong>`} />
+            </Box>
           </Stack>
         </Stack>
       </Stack>
@@ -492,8 +510,7 @@ function useImageUpload() {
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
 
-
-    // @ts-ignore
+  // @ts-ignore
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
       setSelectedFile(undefined)
@@ -511,4 +528,56 @@ function useImageUpload() {
   }
 }
 
-
+// {
+//   seller: {
+//     sellerName: `<h2>MB “KAST PRODUCTIONS”</h2>`,
+//     sellerHeader: ``,
+//     sellerDetails: `
+//       <p>Adresas: Lazdijų r. Mokyklos g. 13.</p>
+//       <p>Tel: +37063692435</p>
+//       <p>Įmonės kodas: 39101260856</p>
+//       <p>hello@kastproductions.com </p>
+//       <p>https://kastproductions.com</p>
+//     `,
+//     issuedOnName: "",
+//     issuedOn: "<p>09-11-2021</p>",
+//     invoiceName: "<h2><strong>SĄSKAITA FAKTŪRA</strong></h2>",
+//     dueToName: "<p><strong>APMOKETI IKI:</strong></p>",
+//     dueTo: "<p>09-11-2021</p>",
+//     invoiceNoName: "<p><strong>SERIJOS NR.:</strong></p>",
+//     invoiceNo: "<p>00004</p>",
+//   },
+//   buyer: {
+//     buyerHeader: `<p style="text-align: right">Pirkėjo rekvizitai:</p>`,
+//     buyerName: `
+//     <p style="text-align: right"><strong>UAB “Baltijos technologijų institutas”</strong></p>
+//     `,
+//     buyerDetails: `
+//       <p style="text-align: right">Adreasas: V.Berbomo g. 10, Klaipėda</p>
+//       <p style="text-align: right">Įmonės kodas: 304166570</p>
+//     `,
+//   },
+//   table: [
+//     [
+//       { type: "Service", name: "Service", value: "Prekės ar paslaugos pavadinimas", enabled: true },
+//       { type: "Units", name: "Units", value: "Mato vnt.", enabled: true },
+//       { type: "Amount", name: "Amount", value: "Kiekis", enabled: true },
+//       { type: "Price", name: "Price", value: "Kaina, EUR", enabled: true },
+//       { type: "Total", name: "Total", value: "Suma, EUR", enabled: true },
+//     ],
+//     [
+//       { type: "Service", value: "Web programavimas" },
+//       { type: "Units", value: "valandos" },
+//       { type: "Amount", value: "5" },
+//       { type: "Price", value: "100.00" },
+//       { type: "Total", value: "500.00" },
+//     ],
+//   ],
+//   tax: { name: "PVM", percent: "21" },
+//   taxTotal: "0",
+//   total: "0",
+//   notes: `
+//     <p><strong>Papildoma informacija</strong></p>
+//     <p>Atsiskaitymas bankiniu pavedimu.</p><p>Sąskaitą išrašė: Karolis Stulgys</p><p>Banko adresas: Pilaitės pr. 16, Vilnius, LT-04352,</p><p>Banko pavadinimas: Paysera LT, UAB</p><p>Gavėjas: MB “Kast productions”</p><p>IBAN: LT503500010014583277</p><p>SWIFT/BIC: EVIULT2VXXX</p><p>Šalis: Lietuva</p>
+//   `,
+// }
