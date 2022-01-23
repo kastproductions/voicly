@@ -1,4 +1,4 @@
-import FingerprintJS from "@fingerprintjs/fingerprintjs"
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 const fpPromise = FingerprintJS.load()
 
 export async function getFingerprint() {

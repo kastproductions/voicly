@@ -16,29 +16,29 @@ import {
   Switch,
   FormControl,
   FormLabel,
-} from "@chakra-ui/react"
-import { nanoid } from "nanoid"
-import Head from "next/head"
-import React, { useReducer } from "react"
-import { useReactToPrint } from "react-to-print"
+} from '@chakra-ui/react'
+import { nanoid } from 'nanoid'
+import Head from 'next/head'
+import React, { useReducer } from 'react'
+import { useReactToPrint } from 'react-to-print'
 // import { proxy, useSnapshot, subscribe } from "valtio"
 // import { FiPrinter } from "react-icons/fi"
 // import { getFingerprint } from "../utils/fingerprint"
 // import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query"
 // import { addInvoiceItem, subscribeOnDataChange } from "../utils/firebase"
 // import { FiCheck } from "react-icons/fi"
-import dynamic from "next/dynamic"
-import { useRouter } from "next/dist/client/router"
-import Script from "next/script"
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/dist/client/router'
+import Script from 'next/script'
 
-const Editor = dynamic(() => import("../components/editor"), { ssr: false })
+const Editor = dynamic(() => import('../components/editor'), { ssr: false })
 
 export default function Create() {
   const componentRef = React.useRef<HTMLDivElement>(null)
   const [isPrinting, setIsPrinting] = React.useState(false)
   const [isRetina, setIsRetina] = React.useState(false)
   const [showEditableFields, setShowEditableFields] = React.useState(false)
-  const [fontFamily, setFontFamily] = React.useState("monospace")
+  const [fontFamily, setFontFamily] = React.useState('monospace')
 
   // const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
 
@@ -73,13 +73,23 @@ export default function Create() {
       <Head>
         <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+          rel="stylesheet"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </Head>
-      <Stack isInline py={16} bg="gray.100" minH="100vh" color="gray.900" width="full">
+      <Stack
+        isInline
+        py={16}
+        bg="gray.100"
+        minH="100vh"
+        color="gray.900"
+        width="full"
+      >
         <Box mx="auto">
           <Stack isInline spacing={16}>
             <Box>
@@ -108,7 +118,7 @@ export default function Create() {
                   height="1px"
                   borderBottom="1px dashed"
                   borderColor="gray.400"
-                 />
+                />
               </Box>
             </Box>
             <Stack>
@@ -116,11 +126,18 @@ export default function Create() {
                 <FormLabel htmlFor="fields" mb="0">
                   Show editable fields
                 </FormLabel>
-                <Switch id="fields" isChecked={showEditableFields} onChange={() => setShowEditableFields(!showEditableFields)} />
+                <Switch
+                  id="fields"
+                  isChecked={showEditableFields}
+                  onChange={() => setShowEditableFields(!showEditableFields)}
+                />
               </FormControl>
               <Stack isInline alignItems="center">
                 <Text>Font:</Text>
-                <select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)}>
+                <select
+                  value={fontFamily}
+                  onChange={(e) => setFontFamily(e.target.value)}
+                >
                   <option value="Roboto">Roboto</option>
                   <option value="system-ui">system-ui</option>
                   <option value="Montserrat">Montserrat</option>
@@ -131,7 +148,7 @@ export default function Create() {
                 </select>
               </Stack>
               <Stack isInline>
-                <Button onClick={() => router.push("/")}>Home</Button>
+                <Button onClick={() => router.push('/')}>Home</Button>
                 <Button onClick={onPrint}>Print</Button>
               </Stack>
             </Stack>
@@ -153,13 +170,13 @@ const sampleInvoiceInput = {
       <p>Email: hello@helloworld.com</p>
       <p>Website: https://helloworld.com</p>
     `,
-    issuedOnName: "",
-    issuedOn: `<p>${new Date().toLocaleDateString("en-US")}</p>`,
-    invoiceName: "<h2><strong>INVOICE</strong></h2>",
-    dueToName: "<p><strong>DUE TO:</strong></p>",
-    dueTo: "<p>09-11-2021</p>",
-    invoiceNoName: "<p><strong>SINVOICE NO.:</strong></p>",
-    invoiceNo: "<p>00001</p>",
+    issuedOnName: '',
+    issuedOn: `<p>${new Date().toLocaleDateString('en-US')}</p>`,
+    invoiceName: '<h2><strong>INVOICE</strong></h2>',
+    dueToName: '<p><strong>DUE TO:</strong></p>',
+    dueTo: '<p>09-11-2021</p>',
+    invoiceNoName: '<p><strong>SINVOICE NO.:</strong></p>',
+    invoiceNo: '<p>00001</p>',
   },
   buyer: {
     buyerHeader: `<p style="text-align: right">Client</p>`,
@@ -173,78 +190,111 @@ const sampleInvoiceInput = {
   },
   table: [
     [
-      { type: "Service", name: "Service", value: "Service", enabled: true },
-      { type: "Units", name: "Units", value: "Units", enabled: true },
-      { type: "Amount", name: "Amount", value: "Amount", enabled: true },
-      { type: "Price", name: "Price", value: "Price, EUR", enabled: true },
-      { type: "Total", name: "Total", value: "Total, EUR", enabled: true },
+      { type: 'Service', name: 'Service', value: 'Service', enabled: true },
+      { type: 'Units', name: 'Units', value: 'Units', enabled: true },
+      { type: 'Amount', name: 'Amount', value: 'Amount', enabled: true },
+      { type: 'Price', name: 'Price', value: 'Price, EUR', enabled: true },
+      { type: 'Total', name: 'Total', value: 'Total, EUR', enabled: true },
     ],
     [
-      { type: "Service", value: "Web development" },
-      { type: "Units", value: "hours" },
-      { type: "Amount", value: "5" },
-      { type: "Price", value: "100.00" },
-      { type: "Total", value: "500.00" },
+      { type: 'Service', value: 'Web development' },
+      { type: 'Units', value: 'hours' },
+      { type: 'Amount', value: '5' },
+      { type: 'Price', value: '100.00' },
+      { type: 'Total', value: '500.00' },
     ],
   ],
-  tax: { name: "VAT", percent: "10" },
-  taxTotal: "0",
-  total: "0",
+  tax: { name: 'VAT', percent: '10' },
+  taxTotal: '0',
+  total: '0',
   notes: `
     <p><strong>NOTES</strong></p>
     <p>Bank address: Hello 16, World</p><p>Bank name: HHH</p><p>Receiver: “Hello World”</p><p>IBAN: LT1234567890</p><p>SWIFT/BIC: WWWXXX</p><p>Country: Lithuania</p>
   `,
 }
 
-const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableFields }: any, ref) => {
-  const [state, setstate] = React.useState(() => sampleInvoiceInput)
+const InvoiceToPrint = React.forwardRef(
+  ({ isPrinting, fontFamily, showEditableFields }: any, ref) => {
+    const [state, setstate] = React.useState(() => sampleInvoiceInput)
 
-  const { onSelectFile, selectedFile, preview } = useImageUpload()
+    const { onSelectFile, selectedFile, preview } = useImageUpload()
 
-  const { sellerName, sellerDetails, issuedOnName, issuedOn, dueToName, dueTo, invoiceNoName, invoiceNo, invoiceName } = state.seller
-  const { buyerHeader, buyerName, buyerDetails } = state.buyer
-  const { notes } = state
+    const {
+      sellerName,
+      sellerDetails,
+      issuedOnName,
+      issuedOn,
+      dueToName,
+      dueTo,
+      invoiceNoName,
+      invoiceNo,
+      invoiceName,
+    } = state.seller
+    const { buyerHeader, buyerName, buyerDetails } = state.buyer
+    const { notes } = state
 
-  const [picture, setPicture] = React.useState("")
+    const [picture, setPicture] = React.useState('')
 
-  // @ts-ignore
-  const onChangePicture = (e) => {
-    setPicture(URL.createObjectURL(e.target.files[0]))
-  }
+    // @ts-ignore
+    const onChangePicture = (e) => {
+      setPicture(URL.createObjectURL(e.target.files[0]))
+    }
 
-  return (
-    //  @ts-ignore
-    <Box
-      fontFamily={fontFamily}
-      // @ts-ignore
-      ref={ref}
-      height="full"
-      width="full"
-      p="1cm"
-      pl="2.5cm"
-      pt="2cm"
-      color="gray.900"
-      id="invoice-container"
-      position="relative"
-    >
-      <Stack isInline>
-        <Box flex={0.7} bg={showEditableFields ? "blue.50" : "transparent"}>
-          <Editor content={sellerName} />
-          <Editor content={sellerDetails} />
-        </Box>
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          flex={0.3}
-          border={isPrinting || picture ? "none" : "1px dashed"}
-          maxH={32}
-          borderColor="gray.300"
-          bg={showEditableFields ? "blue.50" : "transparent"}
-        >
-          <Box as="label" htmlFor="upload-logo" cursor="pointer" width="full" height="full">
-            {!isPrinting && !picture && <input name="logo" id="upload-logo" type="file" onChange={onChangePicture} />}
-            {picture && <Image maxW={64} maxH={32} position="absolute" top="2cm" right="1cm" src={picture} />}
-            {/* <Image
+    return (
+      //  @ts-ignore
+      <Box
+        fontFamily={fontFamily}
+        // @ts-ignore
+        ref={ref}
+        height="full"
+        width="full"
+        p="1cm"
+        pl="2.5cm"
+        pt="2cm"
+        color="gray.900"
+        id="invoice-container"
+        position="relative"
+      >
+        <Stack isInline>
+          <Box flex={0.7} bg={showEditableFields ? 'blue.50' : 'transparent'}>
+            <Editor content={sellerName} />
+            <Editor content={sellerDetails} />
+          </Box>
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            flex={0.3}
+            border={isPrinting || picture ? 'none' : '1px dashed'}
+            maxH={32}
+            borderColor="gray.300"
+            bg={showEditableFields ? 'blue.50' : 'transparent'}
+          >
+            <Box
+              as="label"
+              htmlFor="upload-logo"
+              cursor="pointer"
+              width="full"
+              height="full"
+            >
+              {!isPrinting && !picture && (
+                <input
+                  name="logo"
+                  id="upload-logo"
+                  type="file"
+                  onChange={onChangePicture}
+                />
+              )}
+              {picture && (
+                <Image
+                  maxW={64}
+                  maxH={32}
+                  position="absolute"
+                  top="2cm"
+                  right="1cm"
+                  src={picture}
+                />
+              )}
+              {/* <Image
               maxW={64}
               maxH={48}
               position="absolute"
@@ -253,46 +303,57 @@ const InvoiceToPrint = React.forwardRef(({ isPrinting, fontFamily, showEditableF
               //  src="/img/logo.png"
               src="https://logo.clearbit.com/spotify.com"
             /> */}
-          </Box>
-          {/* <Text fontWeight="bold" color="gray.300">
+            </Box>
+            {/* <Text fontWeight="bold" color="gray.300">
             LOGO
           </Text> */}
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack isInline spacing={6} pt={20}>
-        <Box flex={1} bg={showEditableFields ? "blue.50" : "transparent"}>
-          <Editor content={issuedOn} />
-          <Editor content={invoiceName} />
-          <Stack isInline alignItems="center" spacing={0}>
-            <Editor content={invoiceNoName} />
-            <Box px={1} />
-            <Editor content={invoiceNo} />
-          </Stack>
-          <Stack isInline alignItems="center" spacing={0}>
-            <Editor content={dueToName} />
-            <Box px={1} />
-            <Editor content={dueTo} />
-          </Stack>
+        <Stack isInline spacing={6} pt={20}>
+          <Box flex={1} bg={showEditableFields ? 'blue.50' : 'transparent'}>
+            <Editor content={issuedOn} />
+            <Editor content={invoiceName} />
+            <Stack isInline alignItems="center" spacing={0}>
+              <Editor content={invoiceNoName} />
+              <Box px={1} />
+              <Editor content={invoiceNo} />
+            </Stack>
+            <Stack isInline alignItems="center" spacing={0}>
+              <Editor content={dueToName} />
+              <Box px={1} />
+              <Editor content={dueTo} />
+            </Stack>
+          </Box>
+          <Box flex={1} bg={showEditableFields ? 'blue.50' : 'transparent'}>
+            <Editor content={buyerHeader} />
+            <Editor content={buyerName} />
+            <Editor content={buyerDetails} />
+          </Box>
+        </Stack>
+        <Stack py={20}>
+          <InvoiceItemList
+            isPrinting={isPrinting}
+            state={state}
+            setstate={setstate}
+            showEditableFields={showEditableFields}
+          />
+        </Stack>
+        <Box bg={showEditableFields ? 'blue.50' : 'transparent'}>
+          <Editor content={notes} />
         </Box>
-        <Box flex={1} bg={showEditableFields ? "blue.50" : "transparent"}>
-          <Editor content={buyerHeader} />
-          <Editor content={buyerName} />
-          <Editor content={buyerDetails} />
-        </Box>
-      </Stack>
-      <Stack py={20}>
-        <InvoiceItemList isPrinting={isPrinting} state={state} setstate={setstate} showEditableFields={showEditableFields} />
-      </Stack>
-      <Box bg={showEditableFields ? "blue.50" : "transparent"}>
-        <Editor content={notes} />
       </Box>
-    </Box>
-  )
-})
+    )
+  }
+)
 
-InvoiceToPrint.displayName = "InvoiceToPrint"
+InvoiceToPrint.displayName = 'InvoiceToPrint'
 
-function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: any) {
+function InvoiceItemList({
+  isPrinting,
+  state,
+  setstate,
+  showEditableFields,
+}: any) {
   React.useEffect(() => {
     let total: number = state.table
       // @ts-ignore
@@ -301,12 +362,12 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
           return acc
         }
         // @ts-ignore
-        const rowsTotal = row.find(({ type }) => type === "Total").value
+        const rowsTotal = row.find(({ type }) => type === 'Total').value
         const newtotal = +rowsTotal + acc
         return newtotal as number
       }, 0)
 
-    if (typeof state.tax.percent === "undefined") {
+    if (typeof state.tax.percent === 'undefined') {
       setstate({ ...state, total: total.toFixed(2) })
       rerender()
       return
@@ -319,21 +380,28 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
     taxTotal = taxTotal.toFixed(2)
     setstate({ ...state, total, taxTotal })
     rerender()
-  }, [state.table, state.tax.percent])
+  }, [state.table, state.tax.percent, setstate, state])
 
   const handlePercentageChange = (percent: string) => {
-    if (percent === "") {
-      setstate({ ...state, tax: { ...state.tax, percent: undefined }, taxTotal: undefined })
+    if (percent === '') {
+      setstate({
+        ...state,
+        tax: { ...state.tax, percent: undefined },
+        taxTotal: undefined,
+      })
       return
     }
     if (Number.isNaN(+percent)) {
-      setstate({ ...state, tax: { ...state.tax, percent: "21" } })
+      setstate({ ...state, tax: { ...state.tax, percent: '21' } })
       return
     }
     setstate({ ...state, tax: { ...state.tax, percent } })
   }
 
-  const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
+  const [key, rerender] = React.useReducer(
+    (state, action = 1) => state + action,
+    0
+  )
 
   const handleChange = ({ index, rowIndex, type, value }: any) => {
     const newState = { ...state }
@@ -343,22 +411,29 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
       setstate(newState)
       rerender()
       return
-    } 
-      // Change numbers only if it's valid number
-      if (type === "Price" || type === "Amount") {
-        if (!Number.isNaN(+value)) {
-          newState.table[rowIndex][index].value = value
-        }
-      } else {
+    }
+    // Change numbers only if it's valid number
+    if (type === 'Price' || type === 'Amount') {
+      if (!Number.isNaN(+value)) {
         newState.table[rowIndex][index].value = value
       }
-    
-    const indexOfPrice = newState.table[rowIndex].findIndex(({ type }: any) => type === "Price")
-    const indexOfAmount = newState.table[rowIndex].findIndex(({ type }: any) => type === "Amount")
-    const indexOfTotal = newState.table[rowIndex].findIndex(({ type }: any) => type === "Total")
+    } else {
+      newState.table[rowIndex][index].value = value
+    }
+
+    const indexOfPrice = newState.table[rowIndex].findIndex(
+      ({ type }: any) => type === 'Price'
+    )
+    const indexOfAmount = newState.table[rowIndex].findIndex(
+      ({ type }: any) => type === 'Amount'
+    )
+    const indexOfTotal = newState.table[rowIndex].findIndex(
+      ({ type }: any) => type === 'Total'
+    )
 
     newState.table[rowIndex][indexOfTotal].value = (
-      +newState.table[rowIndex][indexOfPrice].value * +newState.table[rowIndex][indexOfAmount].value
+      +newState.table[rowIndex][indexOfPrice].value *
+      +newState.table[rowIndex][indexOfAmount].value
     ).toFixed(2)
     setstate({ ...newState, table: [...newState.table] })
     rerender()
@@ -393,16 +468,21 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
                   letterSpacing="normal"
                   fontSize="xs"
                   color="gray.900"
-                  textAlign={isFirst ? "left" : isLast ? "end" : "center"}
+                  textAlign={isFirst ? 'left' : isLast ? 'end' : 'center'}
                   pl={isFirst ? 0 : 2}
                   pr={isLast ? 0 : 2}
                   key={index}
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(el) => {
-                    handleChange({ index, rowIndex: 0, type, value: el.currentTarget.innerText })
+                    handleChange({
+                      index,
+                      rowIndex: 0,
+                      type,
+                      value: el.currentTarget.innerText,
+                    })
                   }}
-                  bg={showEditableFields ? "blue.50" : "transparent"}
+                  bg={showEditableFields ? 'blue.50' : 'transparent'}
                 >
                   {value}
                 </Th>
@@ -428,13 +508,18 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
                       pl={isFirst ? 0 : 2}
                       pr={isLast ? 0 : 2}
                       key={index}
-                      textAlign={isFirst ? "left" : isLast ? "end" : "center"}
+                      textAlign={isFirst ? 'left' : isLast ? 'end' : 'center'}
                       contentEditable={!isLast}
                       suppressContentEditableWarning={!isLast}
                       onBlur={(el) => {
-                        handleChange({ index, rowIndex, type, value: el.currentTarget.innerText })
+                        handleChange({
+                          index,
+                          rowIndex,
+                          type,
+                          value: el.currentTarget.innerText,
+                        })
                       }}
-                      bg={showEditableFields ? "blue.50" : "transparent"}
+                      bg={showEditableFields ? 'blue.50' : 'transparent'}
                     >
                       {value}
                     </Td>
@@ -447,8 +532,13 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
       </Table>
       <Stack isInline justifyContent="space-between">
         <Box>
-          <Box display={isPrinting ? "none" : "block"}>
-            <Button variant="unstyled" fontWeight="black" fontSize="xs" onClick={addRowItem}>
+          <Box display={isPrinting ? 'none' : 'block'}>
+            <Button
+              variant="unstyled"
+              fontWeight="black"
+              fontSize="xs"
+              onClick={addRowItem}
+            >
               + ADD ITEM
             </Button>
           </Box>
@@ -460,7 +550,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
         </Box>
         <Stack pt={4} alignItems="end">
           <Stack isInline>
-            <Stack isInline bg={showEditableFields ? "blue.50" : "transparent"}>
+            <Stack isInline bg={showEditableFields ? 'blue.50' : 'transparent'}>
               <Editor content={state.tax.name} />
               <Stack isInline spacing={0}>
                 <Text
@@ -478,11 +568,14 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
             <Text>{state.tax.percent && state.taxTotal}</Text>
           </Stack>
           <Stack isInline>
-            <Box bg={showEditableFields ? "blue.50" : "transparent"}>
+            <Box bg={showEditableFields ? 'blue.50' : 'transparent'}>
               <Editor content="<h2><strong>Total:<h2></strong>" />
             </Box>
-            <Box bg={showEditableFields ? "blue.50" : "transparent"}>
-              <Editor key={key} content={`<h2><strong>${state.total}<h2></strong>`} />
+            <Box bg={showEditableFields ? 'blue.50' : 'transparent'}>
+              <Editor
+                key={key}
+                content={`<h2><strong>${state.total}<h2></strong>`}
+              />
             </Box>
           </Stack>
         </Stack>

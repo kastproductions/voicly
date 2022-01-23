@@ -43,25 +43,40 @@ import {
   LinkBox,
   LinkOverlay,
   Badge,
-} from "@chakra-ui/react"
-import { nanoid } from "nanoid"
-import Head from "next/head"
-import Image from "next/image"
-import Script from "next/script"
-import React, { useReducer } from "react"
-import { useReactToPrint } from "react-to-print"
-import { proxy, useSnapshot, subscribe } from "valtio"
-import { FiPrinter , FiCheck } from "react-icons/fi"
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query"
+} from '@chakra-ui/react'
+import { nanoid } from 'nanoid'
+import Head from 'next/head'
+import Image from 'next/image'
+import Script from 'next/script'
+import React, { useReducer } from 'react'
+import { useReactToPrint } from 'react-to-print'
+import { proxy, useSnapshot, subscribe } from 'valtio'
+import { FiPrinter, FiCheck } from 'react-icons/fi'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
 // import { Editor } from "../components/editor"
-import dynamic from "next/dynamic"
-import { Router, useRouter } from "next/dist/client/router"
-import { useFirestoreQuery, useFirestoreQueryData } from "@react-query-firebase/firestore"
-import { query, collection, limit, QuerySnapshot, DocumentData } from "firebase/firestore"
-import { firestore } from "../utils/firebase"
-import { getFingerprint } from "../utils/fingerprint"
+import dynamic from 'next/dynamic'
+import { Router, useRouter } from 'next/dist/client/router'
+import {
+  useFirestoreQuery,
+  useFirestoreQueryData,
+} from '@react-query-firebase/firestore'
+import {
+  query,
+  collection,
+  limit,
+  QuerySnapshot,
+  DocumentData,
+} from 'firebase/firestore'
+import { firestore } from '../utils/firebase'
+import { getFingerprint } from '../utils/fingerprint'
 
-const Editor = dynamic(() => import("../components/editor"), { ssr: false })
+const Editor = dynamic(() => import('../components/editor'), { ssr: false })
 // const DEFAULT_INVOICE = {
 //   title: "I N V O I C E",
 //   companyName: "Example Inc.",
@@ -86,27 +101,48 @@ const Editor = dynamic(() => import("../components/editor"), { ssr: false })
 // }
 
 const DEFAULT_INVOICE = {
-  title: "I N V O I C E",
+  title: 'I N V O I C E',
   information: [
-    [{ value: "Invoice no" }, { value: "AA.00001" }],
-    [{ value: "Issued on" }, { value: new Intl.DateTimeFormat().format(new Date()) }],
-    [{ value: "Due to" }, { value: new Intl.DateTimeFormat().format(new Date()) }],
+    [{ value: 'Invoice no' }, { value: 'AA.00001' }],
+    [
+      { value: 'Issued on' },
+      { value: new Intl.DateTimeFormat().format(new Date()) },
+    ],
+    [
+      { value: 'Due to' },
+      { value: new Intl.DateTimeFormat().format(new Date()) },
+    ],
   ],
-  buyer: "me",
-  seller: "you",
+  buyer: 'me',
+  seller: 'you',
   items: [
-    [{ value: "service" }, { value: "units" }, { value: "amount" }, { value: "price" }],
-    [{ value: "Wheel of cheese" }, { value: "pc" }, { value: 5 }, { value: 20 }],
-    [{ value: "Jar of sausages" }, { value: "pc" }, { value: 2 }, { value: 10 }],
-    [{ value: "Tin of waffles" }, { value: "pc" }, { value: 3 }, { value: 14 }],
+    [
+      { value: 'service' },
+      { value: 'units' },
+      { value: 'amount' },
+      { value: 'price' },
+    ],
+    [
+      { value: 'Wheel of cheese' },
+      { value: 'pc' },
+      { value: 5 },
+      { value: 20 },
+    ],
+    [
+      { value: 'Jar of sausages' },
+      { value: 'pc' },
+      { value: 2 },
+      { value: 10 },
+    ],
+    [{ value: 'Tin of waffles' }, { value: 'pc' }, { value: 3 }, { value: 14 }],
   ],
-  taxes: [[{ value: "VAT" }, { value: 21 }]],
+  taxes: [[{ value: 'VAT' }, { value: 21 }]],
   summary: [
-    [{ value: "Subtotal" }, undefined, "0.0"],
-    [{ value: "Tax Rate" }, { value: 0 }, "0.0"],
-    [{ value: "Total" }, { value: "$" }, "0.0"],
+    [{ value: 'Subtotal' }, undefined, '0.0'],
+    [{ value: 'Tax Rate' }, { value: 0 }, '0.0'],
+    [{ value: 'Total' }, { value: '$' }, '0.0'],
   ],
-  notes: "",
+  notes: '',
 }
 
 const invoiceList = [DEFAULT_INVOICE, DEFAULT_INVOICE]
@@ -137,7 +173,13 @@ export default function Home() {
           rel="stylesheet"
         ></link> */}
       </Head>
-      <Box py={16} fontFamily="Inter, sans-serif" bg="gray.100" minH="100vh" color="gray.900">
+      <Box
+        py={16}
+        fontFamily="Inter, sans-serif"
+        bg="gray.100"
+        minH="100vh"
+        color="gray.900"
+      >
         <Stack mx="auto" maxW="5xl" width="full" spacing={6}>
           <Stack spacing={10}>
             <Received />
@@ -166,9 +208,9 @@ function InvoiceHeader() {
         {/* <InvoiceDrawer onPrint={onPrint} /> */}
 
         <Button
-          onClick={() => router.push("/create")}
+          onClick={() => router.push('/create')}
           // ref={btnRef}
-          _hover={{ bg: "blue.400" }}
+          _hover={{ bg: 'blue.400' }}
           letterSpacing="wider"
           size="lg"
           fontSize="xs"
@@ -186,8 +228,8 @@ function InvoiceHeader() {
 }
 
 function InvoiceList() {
-  const ref = query(collection(firestore, "user/QqRKh8emY1adnphvCRbo/invoice"))
-  const { isLoading, data } = useFirestoreQueryData(["invoice"], ref, {
+  const ref = query(collection(firestore, 'user/QqRKh8emY1adnphvCRbo/invoice'))
+  const { isLoading, data } = useFirestoreQueryData(['invoice'], ref, {
     subscribe: true,
   })
 
@@ -199,13 +241,24 @@ function InvoiceList() {
 
   return (
     <Stack>
-      <Stack width="full" isInline alignItems="center" justifyContent="space-between" px={6}>
-        {["No", "Date", "Client", "Amount", "Status"].map((item, index) => {
+      <Stack
+        width="full"
+        isInline
+        alignItems="center"
+        justifyContent="space-between"
+        px={6}
+      >
+        {['No', 'Date', 'Client', 'Amount', 'Status'].map((item, index) => {
           const first = index === 0
           const last = index === 4
           return (
             <Box key={item} flex={1}>
-              <Text textAlign={first ? "start" : last ? "end" : "center"} fontWeight="semibold" fontSize="sm" color="gray.500">
+              <Text
+                textAlign={first ? 'start' : last ? 'end' : 'center'}
+                fontWeight="semibold"
+                fontSize="sm"
+                color="gray.500"
+              >
                 {item}
               </Text>
             </Box>
@@ -226,7 +279,7 @@ function InvoiceList() {
               justifyContent="space-between"
               fontSize="sm"
               _hover={{
-                boxShadow: "outline",
+                boxShadow: 'outline',
               }}
             >
               <Box flex={1}>
@@ -292,9 +345,25 @@ function Received() {
             Payments
           </Text>
         </Box>
-        <Stack p={6} px={10} boxShadow="base" width="auto" bg="white" rounded="md" isInline spacing={10}>
+        <Stack
+          p={6}
+          px={10}
+          boxShadow="base"
+          width="auto"
+          bg="white"
+          rounded="md"
+          isInline
+          spacing={10}
+        >
           <Stack position="relative">
-            <Text textTransform="uppercase" fontSize="xs" color="gray.400" fontWeight="semibold" letterSpacing="widest" lineHeight="none">
+            <Text
+              textTransform="uppercase"
+              fontSize="xs"
+              color="gray.400"
+              fontWeight="semibold"
+              letterSpacing="widest"
+              lineHeight="none"
+            >
               Total received
             </Text>
             <Box position="absolute" top={3} left={-5}>
@@ -310,7 +379,12 @@ function Received() {
             <Stack spacing={2}>
               <Stack isInline spacing={2} alignItems="center">
                 <Box rounded="full" bg="blue.500" boxSize={2} />
-                <Text lineHeight="none" fontSize="xs" color="blue.500" fontWeight="bolder">
+                <Text
+                  lineHeight="none"
+                  fontSize="xs"
+                  color="blue.500"
+                  fontWeight="bolder"
+                >
                   Pending
                 </Text>
               </Stack>
@@ -321,7 +395,12 @@ function Received() {
             <Stack spacing={2}>
               <Stack isInline spacing={2} alignItems="center">
                 <Box rounded="full" bg="orange.500" boxSize={2} />
-                <Text lineHeight="none" fontSize="xs" color="orange.500" fontWeight="bolder">
+                <Text
+                  lineHeight="none"
+                  fontSize="xs"
+                  color="orange.500"
+                  fontWeight="bolder"
+                >
                   In drafts
                 </Text>
               </Stack>
@@ -339,8 +418,11 @@ function Received() {
 
 function SizeExample() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [size, setSize] = React.useState("md")
-  const [key, rerender] = React.useReducer((state, action = 1) => state + action, 0)
+  const [size, setSize] = React.useState('md')
+  const [key, rerender] = React.useReducer(
+    (state, action = 1) => state + action,
+    0
+  )
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -353,7 +435,7 @@ function SizeExample() {
       <Button
         onClick={onOpen}
         // ref={btnRef}
-        _hover={{ bg: "blue.400" }}
+        _hover={{ bg: 'blue.400' }}
         letterSpacing="wider"
         size="lg"
         fontSize="xs"
@@ -401,7 +483,7 @@ const InvoiceToPrint = React.forwardRef((props, ref) => {
   )
 })
 
-InvoiceToPrint.displayName = "InvoiceToPrint"
+InvoiceToPrint.displayName = 'InvoiceToPrint'
 
 // const state = proxy({
 //   invoiceItems: [],

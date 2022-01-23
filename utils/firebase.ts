@@ -1,14 +1,23 @@
-import { initializeApp } from "firebase/app"
-import { getFirestore, doc, addDoc, getDoc, collection, setDoc, onSnapshot, updateDoc } from "firebase/firestore"
+import { initializeApp } from 'firebase/app'
+import {
+  getFirestore,
+  doc,
+  addDoc,
+  getDoc,
+  collection,
+  setDoc,
+  onSnapshot,
+  updateDoc,
+} from 'firebase/firestore'
 
 const firebase = initializeApp({
-  apiKey: "AIzaSyC_FVkpAVagU5L0vUoseOzoIIYkTBGQdjs",
-  authDomain: "invoice-app-5b165.firebaseapp.com",
-  projectId: "invoice-app-5b165",
-  storageBucket: "invoice-app-5b165.appspot.com",
-  messagingSenderId: "729573882905",
-  appId: "1:729573882905:web:ef7d614d8b66f0655d3e88",
-  measurementId: "G-LW3H3BN9EC",
+  apiKey: 'AIzaSyC_FVkpAVagU5L0vUoseOzoIIYkTBGQdjs',
+  authDomain: 'invoice-app-5b165.firebaseapp.com',
+  projectId: 'invoice-app-5b165',
+  storageBucket: 'invoice-app-5b165.appspot.com',
+  messagingSenderId: '729573882905',
+  appId: '1:729573882905:web:ef7d614d8b66f0655d3e88',
+  measurementId: 'G-LW3H3BN9EC',
 })
 
 export const firestore = getFirestore(firebase)

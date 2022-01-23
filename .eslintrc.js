@@ -10,10 +10,6 @@ module.exports = {
     'prettier',
   ],
   rules: {
-    // I suggest you add at least those two rules:
-    // "@typescript-eslint/no-unused-vars": "error",
-    // "@typescript-eslint/no-explicit-any": "error"
-    'no-unused-vars': 'off',
     'no-use-before-define': 'off',
     'valtio/state-snapshot-rule': 'warn',
     'valtio/avoid-this-in-proxy': 'warn',
@@ -26,5 +22,11 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     'consistent-return': 'off',
     'arrow-body-style': 'off',
+    'no-nested-ternary': 'off',
+    'import/extensions': 'off',
+    'react/no-array-index-key': 'off',
+    'no-unused-vars': 'warn',
+    'no-shadow': 'warn',
+    'no-unused-expressions': 'warn',
   },
 }
