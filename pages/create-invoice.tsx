@@ -51,13 +51,16 @@ function EditableText(props) {
   console.count('rerender')
 
   return (
-    <Tooltip label={label} placement="top-start" gutter={0}>
+    <Tooltip label={label} placement="top-start">
       <Text
         whiteSpace="pre-line"
         contentEditable
         suppressContentEditableWarning
         dangerouslySetInnerHTML={{ __html: ch }}
         onBlur={handleBlur}
+        _hover={{
+          shadow: 'outline',
+        }}
         {...rest}
       />
     </Tooltip>
@@ -120,7 +123,6 @@ export default function CreateInvoice() {
             </Box>
             <Box
               maxW={28}
-              bg="gray.100"
               onClick={selectFile}
               cursor="pointer"
               position="relative"
@@ -134,7 +136,8 @@ export default function CreateInvoice() {
                 type="file"
                 id="avatar"
                 name="avatar"
-                accept="image/png, image/jpeg"
+                accept="image/*"
+                // accept="image/png, image/jpeg"
                 onChange={loadFile}
               />
               {logoSrc && (
