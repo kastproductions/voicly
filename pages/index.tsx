@@ -51,17 +51,17 @@ import Script from "next/script"
 import React, { useReducer } from "react"
 import { useReactToPrint } from "react-to-print"
 import { proxy, useSnapshot, subscribe } from "valtio"
-import { FiPrinter } from "react-icons/fi"
-import { getFingerprint } from "../utils/fingerprint"
+import { FiPrinter , FiCheck } from "react-icons/fi"
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query"
-import { firestore } from "../utils/firebase"
-import { FiCheck } from "react-icons/fi"
 // import { Editor } from "../components/editor"
 import dynamic from "next/dynamic"
 import { Router, useRouter } from "next/dist/client/router"
-const Editor = dynamic(() => import("../components/editor"), { ssr: false })
 import { useFirestoreQuery, useFirestoreQueryData } from "@react-query-firebase/firestore"
 import { query, collection, limit, QuerySnapshot, DocumentData } from "firebase/firestore"
+import { firestore } from "../utils/firebase"
+import { getFingerprint } from "../utils/fingerprint"
+
+const Editor = dynamic(() => import("../components/editor"), { ssr: false })
 // const DEFAULT_INVOICE = {
 //   title: "I N V O I C E",
 //   companyName: "Example Inc.",
@@ -370,7 +370,7 @@ function SizeExample() {
         <DrawerOverlay />
         <DrawerContent height="full">
           {/* <DrawerHeader>Invoice</DrawerHeader> */}
-          <DrawerBody bg="gray.100"></DrawerBody>
+          <DrawerBody bg="gray.100" />
         </DrawerContent>
       </Drawer>
     </>

@@ -29,8 +29,9 @@ import { useReactToPrint } from "react-to-print"
 // import { FiCheck } from "react-icons/fi"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/dist/client/router"
-const Editor = dynamic(() => import("../components/editor"), { ssr: false })
 import Script from "next/script"
+
+const Editor = dynamic(() => import("../components/editor"), { ssr: false })
 
 export default function Create() {
   const componentRef = React.useRef<HTMLDivElement>(null)
@@ -107,7 +108,7 @@ export default function Create() {
                   height="1px"
                   borderBottom="1px dashed"
                   borderColor="gray.400"
-                ></Box>
+                 />
               </Box>
             </Box>
             <Stack>
@@ -342,7 +343,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
       setstate(newState)
       rerender()
       return
-    } else {
+    } 
       // Change numbers only if it's valid number
       if (type === "Price" || type === "Amount") {
         if (!Number.isNaN(+value)) {
@@ -351,7 +352,7 @@ function InvoiceItemList({ isPrinting, state, setstate, showEditableFields }: an
       } else {
         newState.table[rowIndex][index].value = value
       }
-    }
+    
     const indexOfPrice = newState.table[rowIndex].findIndex(({ type }: any) => type === "Price")
     const indexOfAmount = newState.table[rowIndex].findIndex(({ type }: any) => type === "Amount")
     const indexOfTotal = newState.table[rowIndex].findIndex(({ type }: any) => type === "Total")
