@@ -12,7 +12,6 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
-  Input,
   useTheme,
   Table,
   Thead,
@@ -26,28 +25,70 @@ import {
   EditableInput,
   EditablePreview,
   Tooltip,
+  Image,
+  Input,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 const data = {
-  companyName: 'MB Kast Productions',
-  address: `Company address line1 \nCompany address line 2 \nCompany address line1`,
+  companyName: '<b>MB Kast Productions</b>',
+  address: `<b><i>ascasc</i></b><div><b><i>asc</i></b></div><d…<i><br></i></b></div><div><b><i>sac</i></b></div>`,
+}
+
+function EditableText(props) {
+  const { children, onBlur, label = '', ...rest } = props
+  const [ch, setCh] = useState('')
+
+  React.useEffect(() => {
+    setCh(children || '')
+  }, [children])
+
+  const handleBlur = (e) => {
+    const { innerText, innerHTML, textContent, value, id } = e.target
+    onBlur({ id, innerHTML })
+  }
+
+  console.count('rerender')
+
+  return (
+    <Tooltip label={label} placement="top-start" gutter={0}>
+      <Text
+        whiteSpace="pre-line"
+        contentEditable
+        suppressContentEditableWarning
+        dangerouslySetInnerHTML={{ __html: ch }}
+        onBlur={handleBlur}
+        {...rest}
+      />
+    </Tooltip>
+  )
 }
 
 export default function CreateInvoice() {
   //   const detailsRef = React.useRef<HTMLParagraphElement>()
   const [state, setState] = React.useState(data)
+  const [logoSrc, setLogoSrc] = React.useState('')
+  const inputFileRef = React.useRef<HTMLInputElement>()
 
-  const handleBlur = (e) => {
-    const { innerText, name } = e.target
-    console.log({ name })
-    setState((prev) => ({ ...prev, [name]: innerText }))
+  const handleBlur = ({ id, innerHTML }) => {
+    console.log({ id })
+    console.log({ innerHTML })
+    // setState((prev) => ({ ...prev, [id]: innerText }))
   }
 
   console.log({ state })
 
+  const loadFile = (event) => {
+    const src = URL.createObjectURL(event.target.files[0])
+    setLogoSrc(src)
+  }
+
+  const selectFile = () => {
+    inputFileRef.current.click()
+  }
+
   return (
-    <Stack py={20}>
+    <Stack py={20} bg="gray.100">
       <Center>
         <Stack
           maxW="3xl"
@@ -56,43 +97,57 @@ export default function CreateInvoice() {
           height="100vh"
           py={10}
           px={20}
+          bg="white"
         >
           <Stack isInline justifyContent="space-between" spacing={4}>
             <Box flex={1}>
-              <Tooltip
+              <EditableText
                 label="Enter your company name"
-                placement="top"
-                gutter={0}
+                fontSize="3xl"
+                id="companyName"
+                onBlur={handleBlur}
               >
-                <Text
-                  whiteSpace="pre-line"
-                  fontSize="3xl"
-                  contentEditable
-                  suppressContentEditableWarning
-                  name="companyName"
-                  onBlur={handleBlur}
-                >
-                  {state.companyName}
-                </Text>
-              </Tooltip>
-              <Tooltip
+                {state.companyName}
+              </EditableText>
+              <EditableText
                 label="Enter your company address"
-                placement="top"
-                gutter={0}
+                fontSize="sm"
+                id="address"
+                onBlur={handleBlur}
               >
-                <Text
-                  name="address"
-                  whiteSpace="pre-line"
-                  fontSize="sm"
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={handleBlur}
-                >
-                  {state.address}
-                </Text>
-              </Tooltip>
+                {state.address}
+              </EditableText>
             </Box>
-            <Box width={40} height={24} bg="gray.100" />
+            <Box
+              maxW={28}
+              bg="gray.100"
+              onClick={selectFile}
+              cursor="pointer"
+              position="relative"
+              bg={logoSrc ? 'transparent' : 'gray.100'}
+            >
+              <Input
+                height={0}
+                width={0}
+                visibility="hidden"
+                ref={inputFileRef}
+                type="file"
+                id="avatar"
+                name="avatar"
+                accept="image/png, image/jpeg"
+                onChange={loadFile}
+              />
+              {logoSrc && (
+                <Image
+                  mt={1}
+                  position="absolute"
+                  top={0}
+                  right={0}
+                  src={logoSrc}
+                  objectFit="contain"
+                />
+              )}
+            </Box>
           </Stack>
 
           {/* <Editable
