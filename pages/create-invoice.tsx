@@ -28,6 +28,7 @@ import {
   Image,
   Input,
   SimpleGrid,
+  HStack,
 } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -48,7 +49,7 @@ function EditableText(props) {
   const [ch, setCh] = useState('')
 
   React.useEffect(() => {
-    setCh(children || '')
+    setCh(children)
   }, [children])
 
   const handleBlur = React.useCallback(
@@ -224,46 +225,85 @@ export default function CreateInvoice() {
 
 function ItemsTable() {
   const [state, setState] = React.useState(gridItems)
+  const [warnItemsList, setWarnItemsList] = React.useState([])
 
   const handleBlur = ({ id, innerHTML }) => {
     const [rowIndex, index] = id.split('-')
-    const copy = [...state]
-    // if (!innerHTML) {
-    //   const rowsCount = copy.length - 1
-    //   delete copy[rowIndex][index]
-    //   Array(rowsCount)
-    //     .fill(null)
-    //     .forEach((it, idx) => {
-    //       delete copy[+rowIndex + (idx + 1)][index]
-    //     })
-    //   setState([...copy])
-    // } else {
+    if (+rowIndex > 0 && +(index > 0) && !+innerHTML) {
+      if (!state[0][index]) {
+        return setWarnItemsList((prev) => prev.filter((_id) => _id !== id))
+      }
+      return setWarnItemsList((prev) => [...prev, id])
+    }
+    setWarnItemsList((prev) => prev.filter((_id) => _id !== id))
+    const copy = JSON.parse(JSON.stringify(state))
     copy[rowIndex][index] = { ...copy[rowIndex][index], name: innerHTML }
+    if (rowIndex !== '0' && (index === '1' || index === '2')) {
+      const qty = +copy[rowIndex][1].name
+      const price = +copy[rowIndex][2].name
+      const lastIndex = copy[rowIndex].length
+      copy[rowIndex][lastIndex - 1].name = (qty * price).toFixed(2)
+    }
     setState([...copy])
-    // }
   }
 
+  const handleAddRow = () => {
+    setState((prev) => [...prev, prev[prev.length - 1]])
+  }
+
+  const total = React.useMemo(() => {
+    return state
+      .reduce((acc, row, index) => {
+        if (index === 0) return 0
+        return +row[row.length - 1].name + acc
+      }, 0)
+      .toFixed(2)
+  }, [state])
+
   return (
-    <Stack pt={10} spacing={0}>
+    <Stack pt={10} spacing={2} position="relative">
       {state?.map((row, rowIdx) => {
         const { length } = row
         return (
-          <SimpleGrid columns={length} key={rowIdx} spacing={4}>
-            {row.map((item, index) => (
-              <EditableText
-                fontSize="sm"
-                textTransform={rowIdx === 0 ? 'uppercase' : 'initial'}
-                key={`${rowIdx}-${index}`}
-                id={`${rowIdx}-${index}`}
-                width="full"
-                onBlur={handleBlur}
-              >
-                {item.name}
-              </EditableText>
-            ))}
-          </SimpleGrid>
+          <Stack isInline width="full">
+            <SimpleGrid columns={length} key={rowIdx} spacing={4} width="full">
+              {row.map((item, index) => {
+                const id = `${rowIdx}-${index}`
+                const shouldWarn = warnItemsList.some((_id) => _id === id)
+                return (
+                  <EditableText
+                    borderWidth="2px"
+                    borderColor={shouldWarn ? 'red.500' : 'transparent'}
+                    textAlign={index === 5 && 'right'}
+                    fontSize="sm"
+                    textTransform={rowIdx === 0 ? 'uppercase' : 'initial'}
+                    fontWeight={rowIdx === 0 ? 'semibold' : 'normal'}
+                    key={`${rowIdx}-${index}`}
+                    id={`${rowIdx}-${index}`}
+                    width="full"
+                    onBlur={handleBlur}
+                  >
+                    {item.name}
+                  </EditableText>
+                )
+              })}
+            </SimpleGrid>
+          </Stack>
         )
       })}
+      <HStack justifyContent="flex-end">
+        <Box>{/* <EditableText fontSize="sm">Subtotal</EditableText> */}</Box>
+        <Box>
+          <Text fontWeight="bold" fontSize="xl">
+            {total}
+          </Text>
+        </Box>
+      </HStack>
+      <Box position="absolute" bottom={0} left={0} just>
+        <Button size="sm" variant="link" onClick={handleAddRow}>
+          Add row
+        </Button>
+      </Box>
     </Stack>
   )
 }
@@ -271,18 +311,26 @@ function ItemsTable() {
 const gridItems = [
   [
     { id: 1, name: 'item' },
-    { id: 1, name: 'quantity' },
-    { id: 1, name: 'price €' },
-    { id: 1, name: 'discount' },
-    { id: 1, name: 'tax %' },
-    { id: 1, name: 'total' },
+    { id: 2, name: 'quantity' },
+    { id: 3, name: 'price €' },
+    { id: 4, name: 'discount' },
+    { id: 5, name: 'tax %' },
+    { id: 6, name: 'total' },
   ],
   [
     { id: 1, name: 'Sample' },
-    { id: 1, name: '12' },
-    { id: 1, name: '20' },
-    { id: 1, name: '15' },
-    { id: 1, name: '21' },
-    { id: 1, name: '240' },
+    { id: 2, name: '12' },
+    { id: 3, name: '20' },
+    { id: 4, name: '15' },
+    { id: 5, name: '21' },
+    { id: 6, name: '240' },
+  ],
+  [
+    { id: 1, name: 'Sample-2' },
+    { id: 2, name: '12' },
+    { id: 3, name: '20' },
+    { id: 4, name: '15' },
+    { id: 5, name: '21' },
+    { id: 6, name: '240' },
   ],
 ]
