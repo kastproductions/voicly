@@ -9,6 +9,7 @@ module.exports = {
     'plugin:valtio/recommended',
     'prettier',
   ],
+  overrides: [{ files: ['*.tsx'], rules: { 'no-undef': 'off' } }],
   rules: {
     'no-use-before-define': 'off',
     'valtio/state-snapshot-rule': 'warn',
