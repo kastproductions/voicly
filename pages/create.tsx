@@ -97,10 +97,10 @@ export default function Create() {
                 boxShadow="base"
                 mx="auto"
                 width="210mm"
+                minH="297mm"
                 // width={isRetina ? "calc(210mm * 1.38)" : "210mm"}
                 bg="white"
                 // minH={isRetina ? "calc(297mm * 1.38)" : "297mm"}
-                minH="297mm"
                 position="relative"
               >
                 <InvoiceToPrint
@@ -294,19 +294,7 @@ const InvoiceToPrint = React.forwardRef(
                   src={picture}
                 />
               )}
-              {/* <Image
-              maxW={64}
-              maxH={48}
-              position="absolute"
-              top="2cm"
-              right="1cm"
-              //  src="/img/logo.png"
-              src="https://logo.clearbit.com/spotify.com"
-            /> */}
             </Box>
-            {/* <Text fontWeight="bold" color="gray.300">
-            LOGO
-          </Text> */}
           </Stack>
         </Stack>
         <Stack isInline spacing={6} pt={20}>
