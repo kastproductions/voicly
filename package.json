@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
+    "export": "yarn build && next export",
     "start": "next start",
     "lint": "next lint --fix"
   },
@@ -30,6 +30,7 @@
     "@zeit/next-css": "^1.0.1",
     "add": "^2.0.6",
     "axios": "^0.26.0",
+    "chrome-aws-lambda": "^10.1.0",
     "classnames": "^2.3.1",
     "draft-js": "^0.11.7",
     "firebase": "^9.6.7",
@@ -40,6 +41,7 @@
     "next": "12.1.0",
     "next-pwa": "^5.4.5",
     "puppeteer": "^13.4.1",
+    "puppeteer-core": "^13.4.1",
     "react": "^17.0.2",
     "react-datepicker": "^4.7.0",
     "react-dom": "^17.0.2",

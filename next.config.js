@@ -2,7 +2,6 @@
 const withPWA = require('next-pwa')
 
 module.exports = withPWA({
-  target: 'serverless',
   reactStrictMode: true,
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -13,7 +12,7 @@ module.exports = withPWA({
     dest: 'public',
     register: true,
     skipWaiting: true,
-    // disable: process.env.NODE_ENV === "development",
+    disable: process.env.NODE_ENV === 'development',
   },
   async redirects() {
     return [
