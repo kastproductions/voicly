@@ -12,10 +12,6 @@
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
-    "@ckeditor/ckeditor5-alignment": "^32.0.0",
-    "@ckeditor/ckeditor5-build-classic": "^32.0.0",
-    "@ckeditor/ckeditor5-editor-inline": "^32.0.0",
-    "@ckeditor/ckeditor5-react": "^4.0.0",
     "@codemirror/lang-html": "^0.19.4",
     "@codemirror/theme-one-dark": "^0.19.1",
     "@emotion/react": "^11",
