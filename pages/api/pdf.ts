@@ -22,6 +22,5 @@ export default async function handler(
   const pdf = await generatePDF({ html, margin })
 
   res.setHeader('Content-Type', 'application/pdf')
-  res.status(200)
-  res.send(pdf)
+  res.status(200).send(pdf)
 }

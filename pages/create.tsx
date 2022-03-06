@@ -233,7 +233,7 @@ export default function CreateInvoice() {
       return acc
     }, '')
 
-    axios
+    return axios
       .post(
         '/api/pdf',
         {
