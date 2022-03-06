@@ -1,54 +1,22 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/require-default-props */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Stack,
   Text,
   Button,
   Box,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
   useDisclosure,
-  useTheme,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  Center,
   Tooltip,
-  Image,
-  Input,
   SimpleGrid,
   HStack,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-  VisuallyHiddenInput,
-  TableCaption,
-  Textarea,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
-  TextProps,
-  VStack,
-  IconButton,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useReducer, useRef, useState } from 'react'
@@ -234,7 +202,7 @@ export default function CreateInvoice() {
     }, '')
     try {
       const response = await axios.post(
-        '/api/pdf',
+        `${window.origin}/api/pdf`,
         {
           innerHTML: invoiceRef.current.innerHTML,
           styleTags,
