@@ -8,12 +8,12 @@ module.exports = withPWA({
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development',
-  },
+  // pwa: {
+  //   dest: 'public',
+  //   register: true,
+  //   skipWaiting: true,
+  //   disable: process.env.NODE_ENV === 'development',
+  // },
   async redirects() {
     return [
       {

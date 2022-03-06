@@ -1,10 +1,32 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import generatePDF from '../../utils/generatePDF'
+import chromium from 'chrome-aws-lambda'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function generatePDF({ html = '', margin }) {
+  const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
+    ignoreHTTPSErrors: true,
+    headless: true,
+  })
+  const page = await browser.newPage()
+
+  await page.setContent(html)
+  await page.emulateMediaType('print')
+  const { bottom = '1cm', top = '1cm', left = '3cm', right = '1.5cm' } = margin
+
+  const pdfBuffer = await page.pdf({
+    format: 'a4',
+    printBackground: true,
+    margin: { bottom, top, left, right },
+  })
+
+  await page.close()
+  await browser.close()
+
+  return pdfBuffer
+}
+
+export default async function handler(req, res) {
   const { styleTags = '', innerHTML = '', margin = {} } = req.body
   const html = `<html>
     <head>
@@ -22,5 +44,6 @@ export default async function handler(
   const pdf = await generatePDF({ html, margin })
 
   res.setHeader('Content-Type', 'application/pdf')
+  res.setHeader('Content-Length', pdf.length)
   res.status(200).send(pdf)
 }
