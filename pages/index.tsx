@@ -310,7 +310,6 @@ function InvoiceList() {
                     justifyContent="center"
                     // width={16}
                     px={4}
-                    isInline
                     textTransform="capitalize"
                     fontWeight="bold"
                     textAlign="end"

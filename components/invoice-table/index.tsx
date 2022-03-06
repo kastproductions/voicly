@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import React, { useReducer } from 'react'
+import React from 'react'
 
 import {
   Stack,
@@ -25,8 +25,10 @@ import {
   MenuDivider,
   Checkbox,
 } from '@chakra-ui/react'
-import { ReactRenderer } from '@tiptap/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { proxy, useSnapshot } from 'valtio'
+import { proxyWithComputed } from 'valtio/utils'
+import { ReactRenderer } from '@tiptap/react'
 import { Editable } from '../editable'
 
 const printNone = {
@@ -35,241 +37,322 @@ const printNone = {
   },
 }
 
-const data = {
-  title: 'Invoice',
-  invoiceNo: 'Invoice',
-  issueDate: '12/12/2022',
-  dueDate: '12/12/2022',
-  reference: 'O/12-234',
-  sellerName: 'MB Kast Production',
-  sellerDetails: `305830693\nMokyklos g. 13, Verstaminu k., Lazdiju raj., LT-67412\nhello@kastproductions.com`,
-  buyerName: 'Brand On Demand',
-  buyerDetails: `40203267663\n Jelgava, Peldu iela 7, LV-3002`,
-  notes: '',
-  table: {
-    head: ['item', 'quantity', 'price €', 'discount %', 'tax %', 'total €'],
-    body: [
-      [
-        { label: 'item', value: 'Food' },
-        { label: 'quantity', value: '4' },
-        { label: 'price', value: '32.00' },
-        { label: 'discount', value: '10' },
-        { label: 'tax', value: '21' },
-        { label: 'total', value: '128.00' },
-      ],
-      [
-        { label: 'item', value: 'Food' },
-        { label: 'quantity', value: '4' },
-        { label: 'price', value: '32.00' },
-        { label: 'discount', value: '10' },
-        { label: 'tax', value: '21' },
-        { label: 'total', value: '128.00' },
-      ],
-    ],
-    footer: {
-      subtotal: '256.00',
-      discountTotal: '25.60',
-      taxTotal: '53.76',
-      total: '284.16',
-    },
+const avoidPrintBreak = {
+  '@media print': {
+    display: 'block',
+    'break-inside': 'avoid',
   },
 }
 
-function getSubtotal({ body }) {
-  return body
-    .reduce((acc, next) => {
-      const rowTotal = +next[next.length - 1].value
-      acc += rowTotal
-      return acc
-    }, 0)
-    .toFixed(2)
+const headers = {
+  0: { id: 0, label: 'nr', value: 'NR', isDisabled: false },
+  1: { id: 1, label: 'item', value: 'ITEM', isDisabled: false },
+  2: { id: 2, label: 'units', value: 'UNITS', isDisabled: false },
+  3: { id: 3, label: 'quantity', value: 'QUANTITY', isDisabled: false },
+  4: { id: 4, label: 'price', value: 'PRICE €', isDisabled: false },
+  5: { id: 5, label: 'discount', value: 'DISCOUNT %', isDisabled: false },
+  6: { id: 6, label: 'tax', value: 'TAX %', isDisabled: false },
+  7: { id: 7, label: 'total', value: 'TOTAL €', isDisabled: false },
 }
 
-function getDiscountTotal({ body }) {
-  return body
-    .reduce((acc, next) => {
-      const rowTotal = +next[next.length - 1].value
-      const discount = +next.find(({ label }) => label === 'discount').value
-      const num = rowTotal * (discount / 100)
-      acc += num
-      return acc
-    }, 0)
-    .toFixed(2)
+const sampleItem = {
+  0: { id: 0, label: 'nr', value: '' },
+  1: { id: 1, label: 'item', value: 'Food' },
+  2: { id: 2, label: 'units', value: 'Vnt.' },
+  3: { id: 3, label: 'quantity', value: '4' },
+  4: { id: 4, label: 'price', value: '32.00' },
+  5: { id: 5, label: 'discount', value: '10' },
+  6: { id: 6, label: 'tax', value: '21' },
+  7: { id: 7, label: 'total', value: '128.00' },
 }
 
-function getTaxTotal({ body }) {
-  return body
-    .reduce((acc, next) => {
-      const rowTotal = +next[next.length - 1].value
-      const discount = +next.find(({ label }) => label === 'tax').value
-      const num = rowTotal * (discount / 100)
-      acc += num
-      return acc
-    }, 0)
-    .toFixed(2)
+const copy = JSON.parse(JSON.stringify(sampleItem))
+
+const UNEDITABLE = [0, 7]
+const EDITABLE = [1, 3, 4, 5, 6]
+
+const data = {
+  // title: 'Invoice',
+  // invoiceNo: 'Invoice',
+  // issueDate: '12/12/2022',
+  // dueDate: '12/12/2022',
+  // reference: 'O/12-234',
+  // sellerName: 'MB Kast Production',
+  // sellerDetails: `305830693\nMokyklos g. 13, Verstaminu k., Lazdiju raj., LT-67412\nhello@kastproductions.com`,
+  // buyerName: 'Brand On Demand',
+  // buyerDetails: `40203267663\n Jelgava, Peldu iela 7, LV-3002`,
+  // notes: '',
+  table: {
+    head: headers,
+    body: [sampleItem, copy],
+  },
 }
 
-function getTotal(copy) {
-  const { taxTotal, discountTotal, subtotal } = copy.footer
-  return (+subtotal - +discountTotal + +taxTotal).toFixed(2)
+function isValidNumber(number) {
+  return typeof number === 'number' && !Number.isNaN(number)
+}
+
+const state = proxyWithComputed(
+  {
+    render: 0,
+    table: data.table,
+    rerender: () => {
+      state.render += 1
+    },
+    onHeadNameChange: ({ id, innerText }) => {
+      if (!innerText.trim()) return state.rerender()
+      state.table.head[id].value = innerText
+    },
+    onInputChange: ({ id, innerText }) => {
+      if (!innerText.trim()) return state.rerender()
+      const [rowIndex, cellIndex] = id.split('-')
+      // [quantity, price, discount, tax]
+      if (['3', '4', '5', '6'].includes(cellIndex)) {
+        const number = +innerText
+        if (isValidNumber(number)) {
+          state.table.body[rowIndex][cellIndex].value = number
+          const price = +state.table.body[rowIndex][4].value
+          const quantity = +state.table.body[rowIndex][3].value
+          state.table.body[rowIndex][7].value = (quantity * price).toFixed(2)
+        } else {
+          return state.rerender()
+        }
+      } else {
+        state.table.body[rowIndex][cellIndex].value = innerText
+      }
+    },
+    addRow: () => {
+      const lastItem = state.table.body[state.table.body.length - 1]
+      const fullCopy = JSON.parse(JSON.stringify(lastItem))
+      state.table.body.push(fullCopy)
+    },
+    removeRow: (rowIndex) => {
+      if (state.table.body.length === 1) return
+      state.table.body.splice(rowIndex, 1)
+    },
+    onColumnsChange: (columns) => {
+      state.table.head = Object.entries(state.table.head).reduce(
+        (acc, [key, next]) => {
+          if (columns.includes(next.label)) {
+            acc[key] = { ...next, isDisabled: false }
+          } else {
+            acc[key] = { ...next, isDisabled: true }
+          }
+          return acc
+        },
+        {}
+      ) as typeof state.table.head
+    },
+  },
+  {
+    // updateRowTotal: (snap) => {
+    //   state.table.body = state.table.body.reduce((acc, next) => {
+    //     const quantity = +next[3].value
+    //     const price = +next[4].value
+    //     const rowTotal = (quantity * price).toFixed(2)
+    //     next[7].value = rowTotal
+    //     acc.push(next)
+    //     return acc
+    //   }, [])
+    // },
+    subtotal: (snap) => {
+      return snap.table.body
+        .reduce((acc, next) => {
+          const rowTotal = +next[7].value
+          acc += rowTotal
+          return acc
+        }, 0)
+        .toFixed(2)
+    },
+    discountTotal: (snap) => {
+      const isDisabled = snap.table.head[5].isDisabled
+      if (isDisabled) return 0
+      return snap.table.body
+        .reduce((acc, next) => {
+          const rowTotal = +next[7].value
+          const discount = +next[5].value
+          const num = rowTotal * (discount / 100)
+          acc += num
+          return acc
+        }, 0)
+        .toFixed(2)
+    },
+    taxTotal: (snap) => {
+      const isDisabled = snap.table.head[6].isDisabled
+      if (isDisabled) return 0
+      return snap.table.body
+        .reduce((acc, next) => {
+          const rowTotal = +next[7].value
+          const tax = +next[6].value
+          const num = rowTotal * (tax / 100)
+          acc += num
+          return acc
+        }, 0)
+        .toFixed(2)
+    },
+    total: (snap) => {
+      // @ts-ignore
+      const { taxTotal, discountTotal, subtotal } = snap
+      return (+subtotal - +discountTotal + +taxTotal).toFixed(2)
+    },
+  }
+)
+
+function useState() {
+  return useSnapshot(state)
 }
 
 export function InvoiceTable() {
-  const [tableState, setTableState] = React.useState(data.table)
-  const [hoveredIndex, setHoveredIndex] = React.useState()
-  const [count, rerender] = React.useReducer((s, a = 1) => s + a, 0)
-
-  const handleChange = ({ id, innerText, label }) => {
-    const [rowIndex, cellIndex] = id.split('-')
-    const copy = JSON.parse(JSON.stringify(tableState)) as typeof tableState
-    if (typeof cellIndex === 'undefined') {
-      copy.head[rowIndex] = innerText
-      return setTableState(copy)
-    }
-    if (cellIndex === '0') {
-      copy.body[rowIndex][cellIndex].value = innerText
-      return setTableState(copy)
-    }
-    let value: string | number = +innerText
-    if (Number.isNaN(value) || typeof value !== 'number') return rerender()
-    if (label === 'price') {
-      value = value.toFixed(2)
-    }
-    copy.body[rowIndex][cellIndex].value = `${value}`
-    const qty = +copy.body[rowIndex][1].value
-    const price = +copy.body[rowIndex][2].value
-    const rowTotal = (qty * price).toFixed(2)
-    copy.body[rowIndex][copy.head.length - 1].value = rowTotal
-    setTableState(copy)
-  }
-
-  const handleRemoveRow = (rowIndex) => {
-    if (tableState.body.length === 1) return
-    const copy = { ...tableState }
-    copy.body = copy.body.filter((_, index) => index !== rowIndex)
-    setTableState(copy)
-  }
-
-  const addNewRow = () => {
-    const lastItem = tableState.body[tableState.body.length - 1]
-    setTableState({
-      ...tableState,
-      body: [...tableState.body, [...lastItem]],
-    })
-  }
-
-  React.useEffect(() => {
-    const copy = { ...tableState }
-    const subtotal = getSubtotal(copy)
-    const discountTotal = getDiscountTotal(copy)
-    const taxTotal = getTaxTotal(copy)
-    copy.footer.subtotal = subtotal
-    copy.footer.discountTotal = discountTotal
-    copy.footer.taxTotal = taxTotal
-    const total = getTotal(copy)
-    copy.footer.total = total
-    setTableState(copy)
-  }, [tableState.body])
+  const snap = useState()
+  const { table } = snap
+  console.log({ table })
 
   return (
     <Stack spacing={4} width="full">
-      <Table variant="simple" width="full" fontSize="xs">
-        <Thead onMouseOver={() => setHoveredIndex(undefined)}>
-          <Tr>
-            <Th px={0} position="absolute" border="none" w={10} ml="-45px" />
-            {tableState.head.map((th, thIndex) => {
-              const isNumeric = thIndex === tableState.head.length - 1
-              const textAlign = thIndex !== 0 ? 'center' : 'left'
-              const id = `${thIndex}`
-              return (
-                <Editable key={id} onBlur={handleChange}>
-                  <Th
-                    id={id}
-                    fontSize="xs"
-                    px={1}
-                    textAlign={textAlign}
-                    isNumeric={isNumeric}
-                  >
-                    {th}
-                  </Th>
-                </Editable>
-              )
-            })}
-          </Tr>
-        </Thead>
-        <Tbody key={count}>
-          {tableState.body.map((tr, trIndex) => {
-            const id = trIndex
-            return (
-              <Tr key={id} onMouseOver={() => setHoveredIndex(trIndex)}>
-                <Td px={0} position="absolute" ml="-45px" border="none" w={10}>
-                  <Box
-                    onClick={() => handleRemoveRow(trIndex)}
-                    visibility={hoveredIndex === trIndex ? 'visible' : 'hidden'}
-                  >
-                    <Button rounded="full" size="xs">
-                      -
-                    </Button>
-                  </Box>
-                </Td>
-                {tr.map(({ label, value }, tdIndex) => {
-                  const id = `${trIndex}-${tdIndex}`
-                  const isNumeric = tdIndex === tableState.head.length - 1
-                  const textAlign = tdIndex !== 0 ? 'center' : 'left'
-                  return (
-                    <Editable
-                      key={id}
-                      onBlur={handleChange}
-                      isDisabled={isNumeric}
-                    >
-                      <Td
-                        data-label={label}
-                        id={id}
-                        px={1}
-                        textAlign={textAlign}
-                        isNumeric={isNumeric}
-                      >
-                        {value}
-                      </Td>
-                    </Editable>
-                  )
-                })}
-              </Tr>
-            )
-          })}
-        </Tbody>
+      <Table variant="simple" width="full" fontSize="xs" key={snap.render}>
+        <TableHead />
+        <TableBody />
       </Table>
-      <Stack isInline onMouseOver={() => setHoveredIndex(undefined)}>
-        <Stack isInline width="full">
-          <Stack isInline width="full" sx={printNone}>
-            <Box>
-              <Button size="xs" onClick={addNewRow}>
-                Add new row
-              </Button>
-            </Box>
-            <Box>
-              <EditColumns />
-            </Box>
-          </Stack>
-        </Stack>
-        <Stack isInline width="full" justifyContent="flex-end">
-          <SimpleGrid columns={2} spacingX={8} spacingY={2} fontSize="sm">
-            <Text>Subtotal:</Text>
-            <Text textAlign="right">{tableState.footer.subtotal}</Text>
-            <Text>Discount:</Text>
-            <Text textAlign="right">{tableState.footer.discountTotal}</Text>
-            <Text>Tax:</Text>
-            <Text textAlign="right">{tableState.footer.taxTotal}</Text>
-            <Text>Total:</Text>
-            <Text textAlign="right">{tableState.footer.total}</Text>
-          </SimpleGrid>
-        </Stack>
-      </Stack>
+      <TableFooter />
     </Stack>
   )
 }
 
+function TableHead() {
+  const snap = useState()
+  return (
+    <Thead>
+      <Tr>
+        <Th px={0} position="absolute" border="none" w={10} ml="-45px" />
+        {Object.values(snap.table.head).map((th, thIndex) => {
+          if (th.isDisabled) return null
+          const isLast = thIndex === Object.values(snap.table.head).length - 1
+          const isFirst = thIndex === 0
+          const textAlign = isLast ? 'right' : isFirst ? 'left' : 'center'
+          return (
+            <Editable key={th.id} onBlur={snap.onHeadNameChange}>
+              <Th
+                id={String(th.id)}
+                fontSize="xs"
+                px={1}
+                textAlign={textAlign}
+                textTransform="none"
+              >
+                {th.value}
+              </Th>
+            </Editable>
+          )
+        })}
+      </Tr>
+    </Thead>
+  )
+}
+
+function TableBody() {
+  const snap = useState()
+  return (
+    <Tbody>
+      {Object.values(snap.table.body).map((tr, trIndex) => {
+        return (
+          <Tr key={trIndex}>
+            <Td px={0} position="absolute" ml="-45px" border="none" w={10}>
+              <Button
+                rounded="full"
+                size="xs"
+                onClick={() => snap.removeRow(trIndex)}
+              >
+                -
+              </Button>
+            </Td>
+            {Object.values(tr).map(({ label, value }, tdIndex) => {
+              if (snap.table.head[tdIndex].isDisabled) return null
+              const id = `${trIndex}-${tdIndex}`
+              const isNotEditable = UNEDITABLE.includes(tdIndex)
+              const isLast = tdIndex === 7
+              const isFirst = tdIndex === 0
+              const textAlign = isLast ? 'right' : isFirst ? 'left' : 'center'
+
+              return (
+                <Editable
+                  key={id}
+                  onBlur={snap.onInputChange}
+                  isDisabled={isNotEditable}
+                >
+                  <Td data-label={label} id={id} px={1} textAlign={textAlign}>
+                    {value || trIndex + 1}
+                  </Td>
+                </Editable>
+              )
+            })}
+          </Tr>
+        )
+      })}
+    </Tbody>
+  )
+}
+
+function TableFooter() {
+  const snap = useState()
+
+  const isDiscountDisabled = Object.values(snap.table.head).some(
+    ({ id, isDisabled }) => id === 3 && isDisabled
+  )
+  const isTaxDisabled = Object.values(snap.table.head).some(
+    ({ id, isDisabled }) => id === 4 && isDisabled
+  )
+
+  return (
+    <Stack isInline>
+      <Stack isInline width="full">
+        <Stack isInline width="full" sx={printNone}>
+          <Box>
+            <Button size="xs" onClick={snap.addRow} rounded="sm">
+              Add new row
+            </Button>
+          </Box>
+          <Box>
+            <EditColumns />
+          </Box>
+        </Stack>
+      </Stack>
+      <Box>
+        <Box width="full">
+          <Stack fontSize="sm">
+            <RowItem name="Subtotal:">{snap.subtotal}</RowItem>
+            <RowItem name="Discount:">{snap.discountTotal}</RowItem>
+            <RowItem name="Tax:">{snap.taxTotal}</RowItem>
+            <RowItem name="Total:">{snap.total}</RowItem>
+          </Stack>
+        </Box>
+      </Box>
+    </Stack>
+  )
+}
+
+function RowItem({ name, children }) {
+  return (
+    <HStack justifyContent="space-between" spacing={8}>
+      <Text display="block" sx={avoidPrintBreak}>
+        {name}
+      </Text>
+      <Text display="block" textAlign="right" sx={avoidPrintBreak}>
+        {children}
+      </Text>
+    </HStack>
+  )
+}
+
 function EditColumns() {
+  const snap = useState()
+
+  const columns = Object.values(snap.table.head).filter(
+    ({ label }) => !['item', 'price', 'total'].includes(label)
+  )
+
+  const enabled = Object.values(snap.table.head)
+    .filter(({ isDisabled }) => !isDisabled)
+    .map(({ label }) => label)
+
   return (
     <Menu closeOnSelect={false}>
       <MenuButton
@@ -278,21 +361,23 @@ function EditColumns() {
         size="xs"
         width="full"
         rightIcon={<ChevronDownIcon />}
+        rounded="sm"
       >
         Edit Columns
       </MenuButton>
 
-      <MenuList minWidth="240px" rounded="none" fontSize="sm">
+      <MenuList width="140px" fontSize="xs" rounded="sm">
         <MenuOptionGroup
+          width="140px"
           type="checkbox"
-          defaultValue={['Quantity', 'Discount']}
+          defaultValue={enabled}
+          onChange={snap.onColumnsChange}
         >
-          <MenuItemOption value="item">Item</MenuItemOption>
-          <MenuItemOption value="Quantity">Quantity</MenuItemOption>
-          <MenuItemOption value="Price">Price</MenuItemOption>
-          <MenuItemOption value="Discount">Discount</MenuItemOption>
-          <MenuItemOption value="Tax">Tax</MenuItemOption>
-          <MenuItemOption value="Total">Total</MenuItemOption>
+          {columns.map(({ id, value, label }) => (
+            <MenuItemOption key={id} value={label}>
+              {value}
+            </MenuItemOption>
+          ))}
         </MenuOptionGroup>
       </MenuList>
     </Menu>

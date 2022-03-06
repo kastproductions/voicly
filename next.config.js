@@ -14,4 +14,13 @@ module.exports = withPWA({
     skipWaiting: true,
     // disable: process.env.NODE_ENV === "development",
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/create',
+        permanent: false,
+      },
+    ]
+  },
 })
