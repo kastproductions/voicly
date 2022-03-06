@@ -208,7 +208,7 @@ function InvoiceHeader() {
         {/* <InvoiceDrawer onPrint={onPrint} /> */}
 
         <Button
-          onClick={() => router.push('/create-invoice')}
+          onClick={() => router.push('/create')}
           // ref={btnRef}
           _hover={{ bg: 'blue.400' }}
           letterSpacing="wider"
