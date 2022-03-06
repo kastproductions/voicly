@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint --fix"
   },
@@ -20,6 +21,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fingerprintjs/fingerprintjs": "^3.3.3",
+    "@netlify/plugin-nextjs": "^4.2.7",
     "@react-query-firebase/firestore": "^0.4.2",
     "@tiptap/extension-text-align": "^2.0.0-beta.29",
     "@tiptap/react": "^2.0.0-beta.108",
