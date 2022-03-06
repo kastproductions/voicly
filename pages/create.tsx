@@ -226,15 +226,14 @@ export default function CreateInvoice() {
   const [isPrinting, setIsPrinting] = React.useState(false)
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
 
-  const printPage = () => {
+  const printPage = async () => {
     const st = [...document.head.getElementsByTagName('STYLE')]
     const styleTags = st.reduce((acc, next) => {
       acc += next.outerHTML
       return acc
     }, '')
-
-    return axios
-      .post(
+    try {
+      const response = await axios.post(
         '/api/pdf',
         {
           innerHTML: invoiceRef.current.innerHTML,
@@ -251,14 +250,14 @@ export default function CreateInvoice() {
           },
         }
       )
-      .then((response) => {
-        const blob = new Blob([response.data], { type: 'application/pdf' })
-        const link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = `${Date.now()}.pdf`
-        link.click()
-      })
-      .catch(console.log)
+      const blob = new Blob([response.data], { type: 'application/pdf' })
+      const link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = `${Date.now()}.pdf`
+      link.click()
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
