@@ -183,8 +183,10 @@ const state = proxyWithComputed(
       return snap.table.body
         .reduce((acc, next) => {
           const rowTotal = +next[7].value
+          const discount = +next[5].value
+          const totalWithDiscount = rowTotal - (rowTotal * discount) / 100
           const tax = +next[6].value
-          const num = rowTotal * (tax / 100)
+          const num = totalWithDiscount * (tax / 100)
           acc += num
           return acc
         }, 0)

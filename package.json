@@ -18,6 +18,7 @@
     "@emotion/styled": "^11",
     "@fingerprintjs/fingerprintjs": "^3.3.3",
     "@netlify/plugin-nextjs": "^4.2.7",
+    "@react-pdf/renderer": "^2.1.1",
     "@react-query-firebase/firestore": "^0.4.2",
     "@tiptap/extension-text-align": "^2.0.0-beta.29",
     "@tiptap/react": "^2.0.0-beta.108",
