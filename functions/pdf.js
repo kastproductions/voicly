@@ -67,7 +67,7 @@ exports.handler = async (event, ctx) => {
     headers: {
       'Content-Type': 'application/pdf',
     },
-    body: JSON.stringify(pdf),
+    body: pdf.toString('base64'),
   }
 
   //   res.setHeader('Content-Type', 'application/pdf')

@@ -1,6 +1,6 @@
 [functions]
     directory = "functions"
-    # included_files = ["!node_modules/chrome-aws-lambda/bin/aws.tar.br"]
+    included_files = ["!node_modules/chrome-aws-lambda/bin/aws.tar.br"]
 [[redirects]]
     from = "/api/*"
     to = "/.netlify/functions/pdf"
