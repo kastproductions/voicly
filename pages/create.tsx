@@ -267,7 +267,8 @@ export default function CreateInvoice() {
       })
       const link = document.createElement('a')
       link.href = window.URL.createObjectURL(blob)
-      link.download = `${Date.now()}.pdf`
+      link.target = '_blank'
+      // link.download = `${new Date().toISOString()}.pdf`
       link.click()
     } catch (e) {
       console.log(e)
