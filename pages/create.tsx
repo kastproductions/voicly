@@ -17,6 +17,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
+  Link,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useReducer, useRef, useState } from 'react'
@@ -193,16 +194,58 @@ export default function CreateInvoice() {
 
   const [isPrinting, setIsPrinting] = React.useState(false)
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
-
+  // const linkRef = React.useRef<HTMLAnchorElement>()
+  const href = ''
   const printPage = async () => {
     const st = [...document.head.getElementsByTagName('STYLE')]
     const styleTags = st.reduce((acc, next) => {
       acc += next.outerHTML
       return acc
     }, '')
+
+    // fetch(`${window.origin}/.netlify/functions/pdf`, {
+    // fetch(`${window.origin}/api/pdf`, {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     innerHTML: invoiceRef.current.innerHTML,
+    //     styleTags,
+    //     margin: Object.entries(snap.margin).reduce((acc, [key, value]) => {
+    //       acc[key] = `${value}cm`
+    //       return acc
+    //     }, {}),
+    //   }),
+    // })
+    //   .then((response) => {
+    //     return response.arrayBuffer()
+    //   })
+    //   .then(
+    //     (data) => {
+    //       console.log({ data })
+    //       const url = window.URL.createObjectURL(new Blob([data]))
+    //       const link = document.createElement('a')
+    //       link.href = url
+    //       link.setAttribute('download', `${Date.now()}.pdf`)
+    //       document.body.appendChild(link)
+    //       link.click()
+    //       // do stuff with `data`
+    //       // console.log(data, data instanceof ArrayBuffer)
+    //       // const link = document.createElement('a')
+    //       // link.href = URL.createObjectURL(
+    //       //   new Blob([data], {
+    //       //     type: 'application/pdf',
+    //       //   })
+    //       // )
+    //       // link.download = `${'ddd'}.pdf`
+    //       // link.click()
+    //     },
+    //     (err) => {
+    //       console.log(err)
+    //     }
+    //   )
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         `${window.origin}/api/pdf`,
+        // `${window.origin}/.netlify/functions/pdf`,
         {
           innerHTML: invoiceRef.current.innerHTML,
           styleTags,
@@ -218,7 +261,10 @@ export default function CreateInvoice() {
           },
         }
       )
-      const blob = new Blob([response.data], { type: 'application/pdf' })
+      console.log(data, data instanceof ArrayBuffer)
+      const blob = new Blob([data], {
+        type: 'application/pdf',
+      })
       const link = document.createElement('a')
       link.href = window.URL.createObjectURL(blob)
       link.download = `${Date.now()}.pdf`

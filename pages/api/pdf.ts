@@ -1,4 +1,5 @@
-import chromium from 'chrome-aws-lambda'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const chromium = require('chrome-aws-lambda')
 
 async function generatePDF({ html = '', margin }) {
   const browser = await chromium.puppeteer.launch({
