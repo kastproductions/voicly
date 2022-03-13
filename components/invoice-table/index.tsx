@@ -44,7 +44,7 @@ const avoidPrintBreak = {
   },
 }
 
-const headers = {
+const header = {
   0: { id: 0, label: 'nr', value: 'NR', isDisabled: false },
   1: { id: 1, label: 'item', value: 'ITEM', isDisabled: false },
   2: { id: 2, label: 'units', value: 'UNITS', isDisabled: false },
@@ -53,6 +53,13 @@ const headers = {
   5: { id: 5, label: 'discount', value: 'DISCOUNT %', isDisabled: false },
   6: { id: 6, label: 'tax', value: 'TAX %', isDisabled: false },
   7: { id: 7, label: 'total', value: 'TOTAL €', isDisabled: false },
+}
+
+const footer = {
+  0: { id: 0, label: 'subtotal', value: 'Subtotal', isDisabled: false },
+  1: { id: 1, label: 'discount', value: 'Discount', isDisabled: false },
+  2: { id: 2, label: 'tax', value: 'Tax', isDisabled: false },
+  3: { id: 3, label: 'total', value: 'Total', isDisabled: false },
 }
 
 const sampleItem = {
@@ -83,8 +90,9 @@ const data = {
   // buyerDetails: `40203267663\n Jelgava, Peldu iela 7, LV-3002`,
   // notes: '',
   table: {
-    head: headers,
+    head: header,
     body: [sampleItem, copy],
+    foot: footer,
   },
 }
 
@@ -102,6 +110,11 @@ const state = proxyWithComputed(
     onHeadNameChange: ({ id, innerText }) => {
       if (!innerText.trim()) return state.rerender()
       state.table.head[id].value = innerText
+    },
+    onFootNameChange: ({ id, innerText }) => {
+      if (!innerText.trim()) return state.rerender()
+      console.log({ id, innerText })
+      state.table.foot[id].value = innerText
     },
     onInputChange: ({ id, innerText }) => {
       if (!innerText.trim()) return state.rerender()
@@ -299,9 +312,6 @@ function TableFooter() {
   const isDiscountDisabled = Object.values(snap.table.head).some(
     ({ id, isDisabled }) => id === 3 && isDisabled
   )
-  const isTaxDisabled = Object.values(snap.table.head).some(
-    ({ id, isDisabled }) => id === 4 && isDisabled
-  )
 
   return (
     <Stack isInline>
@@ -320,10 +330,10 @@ function TableFooter() {
       <Box>
         <Box width="full">
           <Stack fontSize="sm">
-            <RowItem name="Subtotal:">{snap.subtotal}</RowItem>
-            <RowItem name="Discount:">{snap.discountTotal}</RowItem>
-            <RowItem name="Tax:">{snap.taxTotal}</RowItem>
-            <RowItem name="Total:">{snap.total}</RowItem>
+            <RowItem {...snap.table.foot[0]}>{snap.subtotal}</RowItem>
+            <RowItem {...snap.table.foot[1]}>{snap.discountTotal}</RowItem>
+            <RowItem {...snap.table.foot[2]}>{snap.taxTotal}</RowItem>
+            <RowItem {...snap.table.foot[3]}>{snap.total}</RowItem>
           </Stack>
         </Box>
       </Box>
@@ -331,13 +341,24 @@ function TableFooter() {
   )
 }
 
-function RowItem({ name, children }) {
+function RowItem(props) {
+  const snap = useState()
+  const { id, label, value, children } = props
+
+  const isTaxDisabled = snap.table.head[6].isDisabled
+  const isDiscountDisabled = snap.table.head[5].isDisabled
+
+  if (isTaxDisabled && label === 'tax') return null
+  if (isDiscountDisabled && label === 'discount') return null
+
   return (
     <HStack justifyContent="space-between" spacing={8}>
-      <Text display="block" sx={avoidPrintBreak}>
-        {name}
-      </Text>
-      <Text display="block" textAlign="right" sx={avoidPrintBreak}>
+      <Editable onBlur={snap.onFootNameChange}>
+        <Text data-label={label} id={id} sx={avoidPrintBreak}>
+          {value}
+        </Text>
+      </Editable>
+      <Text textAlign="right" sx={avoidPrintBreak}>
         {children}
       </Text>
     </HStack>

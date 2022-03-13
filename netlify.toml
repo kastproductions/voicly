@@ -1,7 +1,9 @@
-[functions]
+# [functions]
     # directory = "functions"
-    included_files = ["!node_modules/chrome-aws-lambda/bin/aws.tar.br"]
+    # included_files = ["!node_modules/chrome-aws-lambda/bin/aws.tar.br"]
 # [[redirects]]
 #     from = "/api/*"
 #     to = "/.netlify/functions/pdf"
 #     status = 200
+[build.environment]
+  AWS_LAMBDA_JS_RUNTIME = "nodejs12.x"
